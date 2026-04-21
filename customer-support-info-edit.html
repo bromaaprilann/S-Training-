@@ -51,4 +51,162 @@
         .hint-text { font-size: 12px; color: var(--stripe-slate); margin-top: 4px; line-height: 1.4; }
         .optional-tag { color: var(--stripe-slate); font-weight: 400; font-size: 11px; background: #f6f9fc; padding: 2px 6px; border-radius: 4px; margin-left: 8px; border: 1px solid var(--stripe-border); }
 
-        .descriptor-preview { background: #fcfcfd; border: 1px solid var(--stripe-border); border-radius: 4px; padding: 12
+        .descriptor-preview { background: #fcfcfd; border: 1px solid var(--stripe-border); border-radius: 4px; padding: 12px; margin-top: 12px; }
+        .preview-row { display: flex; justify-content: space-between; font-size: 12px; color: var(--stripe-slate); margin-bottom: 4px; }
+        
+        .toggle-row { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; cursor: pointer; }
+        .switch { position: relative; display: inline-block; width: 34px; height: 18px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #d8dee4; transition: .4s; border-radius: 18px; }
+        .slider:before { position: absolute; content: ""; height: 14px; width: 14px; left: 2px; bottom: 2px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: var(--stripe-purple); }
+        input:checked + .slider:before { transform: translateX(16px); }
+
+        .section-header { font-size: 16px; font-weight: 700; color: var(--stripe-dark); margin: 32px 0 12px; }
+        .footer { padding: 16px 24px; background: #fcfcfd; border-top: 1px solid var(--stripe-border); display: flex; justify-content: flex-end; gap: 12px; }
+        .btn { padding: 9px 16px; border-radius: 4px; font-size: 14px; font-weight: 600; cursor: pointer; border: 1px solid var(--stripe-border); background: #fff; text-decoration: none; color: var(--stripe-dark); }
+        .btn-save { background: var(--stripe-purple); color: #fff; border: none; }
+        .helper-link { color: var(--stripe-purple); text-decoration: none; font-weight: 500; }
+
+        .training-banner { 
+            height: 38px; width: 100%; background: var(--banner-bg); color: #ffffff; 
+            display: flex; align-items: center; justify-content: center; font-size: 11px; 
+            font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; border-top: 2px solid var(--stripe-purple);
+            position: fixed; bottom: 0; left: 0; z-index: 9999;
+        }
+    </style>
+</head>
+<body>
+    <div class="edit-container">
+        <div class="header">
+            <h3>Add public details for customers</h3>
+            <a href="business-details.html" class="close-icon">&times;</a>
+        </div>
+        <div class="body">
+            <p style="font-size: 13px; color: var(--stripe-slate); margin-bottom: 24px;">This information may be visible in payment statements, invoices, and receipts.</p>
+            
+            <div class="input-group">
+                <label class="label">Legal business name</label>
+                <input type="text" id="legalName" class="input-field" value="JOHN DOE" readonly style="background-color: #f9fafb; cursor: not-allowed;">
+                <p class="hint-text">Your legal business name and Employer Identification Number must be entered exactly as they appear on IRS-issued documents.</p>
+            </div>
+
+            <div class="input-group">
+                <label class="label">Business name</label>
+                <input type="text" id="bizName" class="input-field" value="Stripe Training">
+                <p class="hint-text">The operating name of your company, if it's different than the legal name.</p>
+            </div>
+
+            <div class="input-group">
+                <label class="label">Statement descriptor</label>
+                <p class="hint-text" style="margin-bottom:10px;">To prevent chargebacks and disputes, your statement descriptor must be similar to your business name. <a href="#" class="helper-link">View support article</a></p>
+                <input type="text" id="bizDescriptor" class="input-field" value="STRIPE TRAINING">
+                <div class="descriptor-preview">
+                    <div class="preview-row"><span>🏠 Bank Logo</span><span>$XX.XX</span></div>
+                    <div class="preview-row"><span style="color:var(--stripe-purple); font-weight:600;" id="previewText">STRIPE TRAINING</span><span>$XX.XX</span></div>
+                </div>
+                <p class="hint-text">Your statement descriptor shows up on bank statements. It should be 5–22 characters.</p>
+            </div>
+
+            <div class="input-group">
+                <label class="label">Shortened descriptor <span class="optional-tag">Optional</span></label>
+                <input type="text" id="shortDescriptor" class="input-field" placeholder="">
+                <p class="hint-text">This appears on statements when you add descriptors for individual products. It should be 2–10 characters.</p>
+            </div>
+
+            <div style="border-top: 1px solid var(--stripe-border); margin: 32px 0;"></div>
+
+            <h4 class="section-header">Customer support</h4>
+            
+            <div class="input-group">
+                <label class="label">Customer support phone number</label>
+                <input type="text" id="bizPhone" class="input-field" value="+1 502-366-0748">
+            </div>
+
+            <label class="toggle-row">
+                <div class="switch"><input type="checkbox" checked><span class="slider"></span></div>
+                <span style="font-size: 13px; font-weight: 500;">Show phone number on receipts and invoices</span>
+            </label>
+
+            <div class="input-group">
+                <label class="label">Customer support address</label>
+                <select class="input-field"><option>United States</option></select>
+                <input type="text" id="bizStreet" class="input-field" value="1286 Fannie Street" placeholder="Address line 1">
+                <input type="text" id="bizUnit" class="input-field" placeholder="Apartment, unit, or other">
+                <input type="text" id="bizCity" class="input-field" value="Bay City" placeholder="City">
+                <select id="bizState" class="input-field"><option value="TX">Texas</option></select>
+                <input type="text" id="bizZip" class="input-field" value="77414" placeholder="Postal code">
+            </div>
+
+            <div class="input-group">
+                <label class="label">Customer support email</label>
+                <input type="email" id="bizEmail" class="input-field" value="stripelivetraining@gmail.com">
+            </div>
+
+            <div class="input-group">
+                <label class="label">Customer support URL</label>
+                <input type="url" id="supportUrl" class="input-field" placeholder="https://example.com/support">
+            </div>
+
+            <div class="input-group">
+                <label class="label">Business website</label>
+                <input type="url" id="bizWebsite" class="input-field" value="www.stripelivetraining.com">
+            </div>
+
+            <div class="input-group">
+                <label class="label">Privacy policy URL</label>
+                <input type="url" id="privacyUrl" class="input-field" placeholder="https://example.com/privacy-policy">
+                <p class="hint-text">Your website must have a privacy policy describing the information collected and security practices in place.</p>
+            </div>
+
+            <div class="input-group">
+                <label class="label">Terms of service URL</label>
+                <input type="url" id="termsUrl" class="input-field" placeholder="https://example.com/terms-of-service">
+            </div>
+        </div>
+
+        <div class="footer">
+            <a href="business-details.html" class="btn">Cancel</a>
+            <button class="btn btn-save" onclick="saveChanges()">Save</button>
+        </div>
+    </div>
+
+    <div class="training-banner">
+        SIMULATION MODE: THIS SITE IS ONLY INTENDED FOR TRAINING PURPOSES FOR NEW HIRES.
+    </div>
+
+    <script>
+        // Update live preview for the Bank Statement descriptor
+        document.getElementById('bizDescriptor').addEventListener('input', function(e) {
+            document.getElementById('previewText').innerText = e.target.value.toUpperCase();
+        });
+
+        // Save logic to talk to the main dashboard
+        function saveChanges() {
+            // Get all values from inputs
+            const name = document.getElementById('bizName').value;
+            const phone = document.getElementById('bizPhone').value;
+            const street = document.getElementById('bizStreet').value.trim();
+            const city = document.getElementById('bizCity').value.trim();
+            const state = document.getElementById('bizState').value;
+            const zip = document.getElementById('bizZip').value.trim();
+            const website = document.getElementById('bizWebsite').value;
+
+            // Format address string properly for the main dashboard
+            let finalAddr = street;
+            if (city || zip) {
+                finalAddr += "<br>" + city + ", " + state + " " + zip + " US";
+            }
+
+            // Store data in the browser's temporary memory
+            sessionStorage.setItem('storedBusinessName', name);
+            sessionStorage.setItem('storedPhone', phone);
+            sessionStorage.setItem('storedAddress', finalAddr);
+            sessionStorage.setItem('storedWebsite', website);
+
+            // Send the user back to the main dashboard
+            window.location.href = 'business-details.html';
+        }
+    </script>
+</body>
+</html>
