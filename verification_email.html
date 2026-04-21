@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Inbox (1) - trainee@example.com</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gmail-bg: #f6f8fc;
+            --gmail-sidebar: #f6f8fc;
+            --gmail-content: #ffffff;
+            --gmail-text: #1f1f1f;
+            --gmail-secondary: #5f6368;
+            --gmail-active-nav: #d3e3fd;
+            --stripe-purple: #635bff;
+        }
+
+        ::-webkit-scrollbar { display: none; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body { 
+            font-family: 'Roboto', sans-serif; 
+            background: var(--gmail-bg); 
+            color: var(--gmail-text); 
+            display: flex; 
+            flex-direction: column; 
+            height: 100vh; 
+            overflow: hidden; 
+        }
+
+        /* --- SIMULATION WATERMARK --- */
+        body::before {
+            content: "INTERNAL TRAINING SIMULATION ONLY";
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%) rotate(-30deg);
+            font-size: 4.5rem;
+            color: rgba(0, 0, 0, 0.02);
+            font-weight: 900;
+            z-index: 1000;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+        
+        /* Header Section */
+        .header { 
+            height: 64px; 
+            display: flex; 
+            align-items: center; 
+            padding: 0 16px; 
+            justify-content: space-between;
+            flex-shrink: 0;
+            z-index: 2000;
+        }
+        .left-header { display: flex; align-items: center; gap: 20px; }
+        .logo-section { font-size: 22px; color: var(--gmail-secondary); display: flex; align-items: center; gap: 12px; cursor: pointer; }
+        
+        .search-container { 
+            background: #eaf1fb; 
+            height: 48px; 
+            border-radius: 24px; 
+            width: 720px;
+            display: flex; 
+            align-items: center; 
+            padding: 0 20px; 
+            color: var(--gmail-secondary); 
+        }
+
+        .right-header { display: flex; align-items: center; gap: 18px; }
+        .icon-btn { cursor: pointer; font-size: 20px; color: #5f6368; font-style: normal; }
+        .profile-circle { width: 32px; height: 32px; background: #635bff; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px; }
+        
+        .main-container { display: flex; flex: 1; overflow: hidden; }
+        
+        /* Sidebar Navigation */
+        .sidebar { width: 256px; padding-top: 8px; flex-shrink: 0; }
+        .compose-btn { 
+            background: #c2e7ff; 
+            color: #001d35; 
+            border: none; 
+            padding: 18px 24px; 
+            border-radius: 16px; 
+            font-weight: 500; 
+            font-size: 14px; 
+            margin: 0 0 16px 16px; 
+            display: flex; 
+            align-items: center; 
+            gap: 12px; 
+            cursor: pointer; 
+            transition: box-shadow 0.2s;
+        }
+        .compose-btn:hover { box-shadow: 0 1px 3px rgba(0,0,0,0.2); }
+
+        .nav-item { 
+            height: 32px; 
+            display: flex; 
+            align-items: center; 
+            padding: 0 24px; 
+            font-size: 14px; 
+            cursor: pointer; 
+            border-radius: 0 16px 16px 0; 
+            margin-right: 16px; 
+            color: var(--gmail-text);
+        }
+        .nav-item.active { background: var(--gmail-active-nav); font-weight: 700; }
+        .nav-item:hover:not(.active) { background: #eee; }
+        
+        /* Content Area - Fixed: added padding-bottom for banner clearance */
+        .content { 
+            flex: 1; 
+            background: var(--gmail-content); 
+            margin: 0 16px 60px 0; 
+            border-radius: 16px; 
+            display: flex; 
+            flex-direction: column; 
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1); 
+            overflow: hidden;
+            position: relative;
+        }
+
+        .tabs { display: flex; padding: 0 16px; border-bottom: 1px solid #f1f3f4; }
+        .tab { padding: 15px 20px; font-size: 14px; font-weight: 500; color: var(--gmail-secondary); border-bottom: 3px solid transparent; cursor: pointer; }
+        .tab.active { color: #0b57d0; border-bottom-color: #0b57d0; }
+        
+        /* Inbox List */
+        .email-list { flex: 1; overflow-y: auto; }
+        .email-row { 
+            display: flex; 
+            align-items: center; 
+            padding: 10px 16px; 
+            border-bottom: 1px solid #f1f3f4; 
+            cursor: pointer; 
+            font-weight: 700; 
+            position: relative;
+        }
+        .email-row:hover { box-shadow: inset 1px 0 0 #dadce0, inset -1px 0 0 #dadce0, 0 1px 2px 0 rgba(60,64,67,.3), 0 1px 3px 1px rgba(60,64,67,.15); z-index: 1; }
+        .email-row::before { content: ""; position: absolute; left: 0; width: 3px; height: 100%; background: #0b57d0; }
+        
+        .sender { width: 160px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .subject { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 400; }
+        .subject b { font-weight: 700; color: var(--gmail-text); }
+        .time { width: 80px; text-align: right; font-size: 12px; color: var(--gmail-text); font-weight: 700; }
+
+        /* Stripe Email Content View */
+        #emailDetail { display: none; padding: 40px; height: 100%; overflow-y: auto; }
+        .email-header-tools { display: flex; align-items: center; gap: 24px; margin-bottom: 24px; color: #5f6368; }
+        .back-btn { cursor: pointer; font-size: 20px; padding: 8px; border-radius: 50%; }
+        .back-btn:hover { background: #eee; }
+
+        .stripe-card {
+            max-width: 500px;
+            margin: 40px auto;
+            background: #fff;
+            border-radius: 8px;
+            padding: 48px;
+            text-align: center;
+            border: 1px solid #eee;
+        }
+        .stripe-logo { color: var(--stripe-purple); font-size: 32px; font-weight: 800; margin-bottom: 24px; letter-spacing: -1px; }
+        .email-body-text { color: #4f566b; font-size: 16px; line-height: 1.6; margin-bottom: 32px; text-align: left; }
+        .verify-btn { background: var(--stripe-purple); color: white; padding: 12px 24px; border-radius: 4px; text-decoration: none; font-weight: 600; display: inline-block; transition: background 0.2s; }
+        .verify-btn:hover { background: #544ac7; }
+
+        /* --- SAFETY HARBOR BANNER --- */
+        .training-banner {
+            position: fixed; bottom: 0; left: 0; width: 100%;
+            background: #1a1f36; color: #ffffff; padding: 12px;
+            text-align: center; font-size: 11px; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 0.05em;
+            border-top: 2px solid #635bff; z-index: 9999;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div class="left-header">
+            <div class="logo-section">☰ &nbsp; <img src="https://ssl.gstatic.com/ui/v1/icons/mail/rfr/logo_gmail_lockup_default_1x_r5.png" alt="Gmail" height="24"></div>
+            <div class="search-container">🔍 Search mail</div>
+        </div>
+        <div class="right-header">
+            <span class="icon-btn">❔</span>
+            <span class="icon-btn">⚙️</span>
+            <span class="icon-btn">⠿</span>
+            <div class="profile-circle">T</div>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <div class="sidebar">
+            <button class="compose-btn">
+                <img src="https://www.gstatic.com/images/icons/material/system_gm/1x/create_black_24dp.png" alt="" width="24">
+                Compose
+            </button>
+            <div class="nav-item active">Inbox <span style="margin-left:auto">1</span></div>
+            <div class="nav-item">Starred</div>
+            <div class="nav-item">Sent</div>
+            <div class="nav-item">Drafts <span style="margin-left:auto">2</span></div>
+            <div class="nav-item">More</div>
+        </div>
+
+        <div class="content">
+            <div id="inboxView" style="height: 100%; display: flex; flex-direction: column;">
+                <div class="tabs">
+                    <div class="tab active">Primary</div>
+                    <div class="tab">Social</div>
+                    <div class="tab">Promotions</div>
+                </div>
+                <div class="email-list">
+                    <div class="email-row" onclick="openEmail()">
+                        <div class="sender">Stripe</div>
+                        <div class="subject"><b>Your Stripe verification link</b> - <span style="color:#5f6368;">Verify your identity to reveal your live key...</span></div>
+                        <div class="time">11:48 AM</div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="emailDetail">
+                <div class="email-header-tools">
+                    <span class="back-btn" onclick="backToInbox()">←</span>
+                    <span>Archive</span>
+                    <span>Report spam</span>
+                    <span>Delete</span>
+                </div>
+
+                <div class="stripe-card">
+                    <div class="stripe-logo">stripe</div>
+                    <p class="email-body-text">
+                        To help keep your account secure, please verify your identity to reveal your live API key. This link will expire in 24 hours.
+                    </p>
+                    <a href="verify_success.html" class="verify-btn">Verify identity</a>
+                    <p style="margin-top: 32px; font-size: 12px; color: #a3acb9;">
+                        If you didn't request this, you can safely ignore this email.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="training-banner">
+        ⚠️ TRAINING SIMULATION: DO NOT ENTER REAL FINANCIAL OR SENSITIVE DATA.
+    </div>
+
+    <script>
+        function openEmail() {
+            document.getElementById('inboxView').style.display = 'none';
+            document.getElementById('emailDetail').style.display = 'block';
+        }
+        function backToInbox() {
+            document.getElementById('emailDetail').style.display = 'none';
+            document.getElementById('inboxView').style.display = 'flex';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Processing - Stripe Live Training</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --stripe-purple: #635bff;
+            --stripe-dark: #1a1f36;
+            --stripe-slate: #4f566b;
+            --banner-bg: #1a1f36;
+        }
+
+        /* --- GLOBAL RESET --- */
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif !important; -webkit-font-smoothing: antialiased; }
+        
+        body { 
+            background-color: #f6f9fc; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            height: 100vh; 
+            overflow: hidden;
+            flex-direction: column;
+            position: relative;
+        }
+
+        /* --- SIMULATION WATERMARK --- */
+        body::before {
+            content: "INTERNAL TRAINING SIMULATION ONLY";
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%) rotate(-30deg);
+            font-size: 4.5rem;
+            color: rgba(0, 0, 0, 0.02);
+            font-weight: 900;
+            z-index: 0;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+
+        /* --- BOTTOM SAFETY BANNER --- */
+        .training-banner { 
+            width: 100%; 
+            background: var(--banner-bg); 
+            color: #ffffff; 
+            padding: 12px; 
+            text-align: center; 
+            font-size: 11px; 
+            font-weight: 700; 
+            position: fixed; 
+            bottom: 0; 
+            left: 0;
+            text-transform: uppercase; 
+            letter-spacing: 0.05em; 
+            z-index: 9999;
+            border-top: 2px solid var(--stripe-purple);
+        }
+
+        /* Initial Loader Styling */
+        .loader-container {
+            text-align: center;
+            transition: opacity 0.3s ease;
+            z-index: 10;
+            position: relative;
+        }
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid #e6e6e6;
+            border-top: 3px solid var(--stripe-purple);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 20px;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
+        p { color: var(--stripe-slate); font-size: 15px; font-weight: 500; }
+
+        /* Modal Pop-up Styling */
+        #liveModal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-content {
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+            width: 440px;
+            text-align: center;
+            box-shadow: 0 15px 35px rgba(50,50,93,.1), 0 5px 15px rgba(0,0,0,.07);
+            animation: modalPop 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            position: relative;
+            z-index: 1001;
+        }
+        @keyframes modalPop { 0% { transform: scale(0.9); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+
+        .check-circle {
+            width: 48px;
+            height: 48px;
+            background: var(--stripe-purple);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+            color: white;
+            font-size: 24px;
+        }
+        h2 { font-size: 22px; font-weight: 700; color: var(--stripe-dark); margin-bottom: 12px; letter-spacing: -0.02em; }
+        .modal-text { font-size: 15px; color: var(--stripe-slate); line-height: 1.6; margin-bottom: 30px; }
+        
+        .continue-btn {
+            background: var(--stripe-purple);
+            color: white;
+            border: none;
+            padding: 12px 32px;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .continue-btn:hover { background: #5851ff; }
+    </style>
+</head>
+<body>
+
+    <div id="loader" class="loader-container">
+        <div class="spinner"></div>
+        <p>Activating your live account simulation...</p>
+    </div>
+
+    <div id="liveModal">
+        <div class="modal-content">
+            <div class="check-circle">✓</div>
+            <h2>You're now in your live account</h2>
+            <p class="modal-text">This completes the account activation module. You can now view the live dashboard simulation.</p>
+            <button class="continue-btn" onclick="goToDashboard()">Continue</button>
+        </div>
+    </div>
+
+    <div class="training-banner">
+        ⚠️ TRAINING SIMULATION: DO NOT ENTER REAL FINANCIAL OR SENSITIVE DATA.
+    </div>
+
+    <script>
+        // Simulation delay: Wait 2.5 seconds, then fade out loader and show modal
+        setTimeout(() => {
+            const loader = document.getElementById('loader');
+            loader.style.opacity = '0';
+            setTimeout(() => {
+                loader.style.display = 'none';
+                document.getElementById('liveModal').style.display = 'flex';
+            }, 500);
+        }, 2500);
+
+        function goToDashboard() {
+            // Routes to the live dashboard simulation
+            window.location.href = 'dashboard_live.html';
+        }
+    </script>
+
+</body>
+</html>

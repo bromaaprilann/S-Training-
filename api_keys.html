@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="robots" content="noindex, nofollow">
+    <title>API keys - Developers - Stripe Live Training</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --stripe-purple: #635bff; --stripe-dark: #1a1f36; --stripe-slate: #4f566b;
+            --stripe-border: #eeeeee; --stripe-bg: #ffffff; --stripe-search-bg: #f6f9fc;
+            --stripe-red: #df1b41; --training-orange: #ff9900;
+        }
+
+        ::-webkit-scrollbar { display: none; }
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-font-smoothing: antialiased; letter-spacing: -0.012em; }
+        
+        body { background-color: var(--stripe-bg); display: flex; height: 100vh; color: var(--stripe-dark); overflow: hidden; font-family: 'Inter', sans-serif; font-size: 13px; flex-direction: column; }
+
+        /* --- SIMULATION WATERMARK --- */
+        body::before {
+            content: "INTERNAL TRAINING SIMULATION ONLY";
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%) rotate(-30deg);
+            font-size: 4.5rem;
+            color: rgba(0, 0, 0, 0.02);
+            font-weight: 900;
+            z-index: -1;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+
+        .top-training-banner { background: var(--training-orange); color: white; text-align: center; padding: 6px; font-weight: bold; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; flex-shrink: 0; z-index: 2000; }
+
+        .layout-container { display: flex; flex: 1; overflow: hidden; }
+
+        /* Sidebar Navigation */
+        /* Fixed: added padding-bottom and overflow:visible for popup clearance */
+        .sidebar { 
+            width: 260px; border-right: 1px solid var(--stripe-border); padding: 12px 0 60px; 
+            flex-shrink: 0; background: #fff; display: flex; flex-direction: column; 
+            position: relative; z-index: 1000; overflow: visible !important;
+        }
+        .account-switcher { display: flex; align-items: center; gap: 12px; padding: 12px 20px; margin-bottom: 8px; cursor: pointer; }
+        .acc-avatar { width: 24px; height: 24px; background: #635bff; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: white; }
+        .acc-name { font-weight: 600; font-size: 14px; flex: 1; white-space: nowrap; }
+
+        .nav-item { padding: 8px 20px; font-size: 13.5px; color: var(--stripe-slate); cursor: pointer; display: flex; align-items: center; gap: 12px; transition: background 0.1s; }
+        .nav-item:hover { background: #f6f9fc; }
+        .nav-group-label { padding: 24px 20px 8px; font-size: 11px; font-weight: 600; color: var(--stripe-slate); text-transform: uppercase; letter-spacing: 0.025em; }
+
+        /* Developers Pop-up Menu - Fixed z-index */
+        .dev-popup {
+            position: absolute; bottom: 65px; left: 10px; width: 250px; background: #ffffff;
+            border-radius: 8px; box-shadow: 0 15px 35px rgba(50,50,93,.1), 0 5px 15px rgba(0,0,0,.07);
+            border: 1px solid var(--stripe-border); display: none; flex-direction: column; z-index: 10001;
+        }
+        .menu-section { padding: 8px 0; border-bottom: 1px solid var(--stripe-border); }
+        .section-label { padding: 4px 16px 8px; font-size: 11px; font-weight: 700; color: var(--stripe-slate); text-transform: uppercase; letter-spacing: 0.025em; }
+        .menu-item { display: flex; align-items: center; justify-content: space-between; padding: 6px 16px; font-size: 13.5px; color: var(--stripe-dark); text-decoration: none; cursor: pointer; }
+        .menu-item:hover { background: #f6f9fc; color: var(--stripe-purple); }
+
+        .sidebar-footer { margin-top: auto; border-top: 1px solid var(--stripe-border); padding: 12px 20px; cursor: pointer; position: relative; z-index: 1000; }
+
+        /* Main View Top Bar */
+        .main { flex: 1; display: flex; flex-direction: column; min-width: 0; background: #fff; position: relative; }
+        .top-bar { height: 54px; border-bottom: 1px solid var(--stripe-border); display: flex; align-items: center; justify-content: space-between; padding: 0 24px; flex-shrink: 0; }
+        .search-wrapper { background: var(--stripe-search-bg); border-radius: 6px; padding: 6px 12px; width: 320px; display: flex; align-items: center; gap: 10px; color: #a3acb9; }
+
+        .header-icons { display: flex; align-items: center; gap: 20px; }
+        .icon-btn { cursor: pointer; font-size: 18px; opacity: 0.6; display: flex; align-items: center; justify-content: center; }
+        .profile-btn { width: 24px; height: 24px; background: #eee; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #4f566b; cursor: pointer; font-weight: bold; }
+        .plus-circle { background: var(--stripe-purple); color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; cursor: pointer; font-weight: bold; }
+
+        /* Content Area */
+        .content-scroll { flex: 1; overflow-y: auto; padding: 32px 64px 140px; }
+        .tabs { border-bottom: 1px solid var(--stripe-border); margin-bottom: 32px; display: flex; gap: 24px; }
+        .tab-link { padding-bottom: 12px; font-size: 13.5px; color: var(--stripe-slate); text-decoration: none; border-bottom: 2px solid transparent; cursor: pointer; }
+        .tab-link.active { color: var(--stripe-purple); border-bottom: 2px solid var(--stripe-purple); font-weight: 600; }
+
+        .section-header { display: flex; justify-content: space-between; align-items: center; margin-top: 48px; border-bottom: 1px solid var(--stripe-border); padding-bottom: 12px; }
+        .btn-create { background: white; border: 1px solid #d8dee4; padding: 6px 14px; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 13px; }
+
+        .key-table { width: 100%; border-collapse: collapse; margin-top: 16px; table-layout: fixed; }
+        .key-table th { text-align: left; font-size: 11px; text-transform: uppercase; color: var(--stripe-slate); font-weight: 700; padding: 10px 8px; border-bottom: 1px solid var(--stripe-border); }
+        .key-table td { padding: 16px 8px; border-bottom: 1px solid var(--stripe-border); font-size: 13.5px; vertical-align: middle; }
+
+        .reveal-btn { background: #f6f9fc; border: 1px solid #d8dee4; border-radius: 4px; padding: 4px 10px; font-size: 12px; font-weight: 600; cursor: pointer; color: #4f566b; outline: none; }
+
+        /* --- COPY TOOLTIP STYLES --- */
+        .copy-container { position: relative; display: inline-block; cursor: pointer; width: 100%; }
+        .tooltiptext { visibility: hidden; width: 60px; background-color: #1a1f36; color: #fff; text-align: center; border-radius: 4px; padding: 4px 0; position: absolute; z-index: 5000; bottom: 125%; left: 0; opacity: 0; transition: opacity 0.2s; font-family: 'Inter', sans-serif; font-size: 10px; font-weight: 500; pointer-events: none; }
+        .copy-container:hover .tooltiptext { visibility: visible; opacity: 1; }
+
+        /* Modals - Boosted Z-Index */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); display: none; justify-content: center; align-items: center; z-index: 20000; }
+        .modal-card { background: white; width: 480px; border-radius: 8px; padding: 32px; box-shadow: 0 50px 100px rgba(0,0,0,0.1); position: relative; }
+        
+        .code-input { width: 100%; padding: 12px; font-size: 20px; text-align: center; letter-spacing: 8px; border: 1px solid #e6e6e6; border-radius: 4px; margin: 10px 0; outline: none; }
+        .spinner { border: 3px solid #f3f3f3; border-top: 3px solid var(--stripe-purple); border-radius: 50%; width: 24px; height: 24px; animation: spin 1s linear infinite; margin: 10px auto; display: none; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        .key-box { background: #f6f9fc; border: 1px solid #e6e6e6; padding: 12px; border-radius: 4px; font-family: monospace; font-size: 14px; margin-bottom: 16px; word-break: break-all; }
+        .note-area { width: 100%; height: 80px; border: 1px solid var(--stripe-purple); border-radius: 4px; padding: 10px; font-size: 13px; outline: none; margin-bottom: 20px; }
+
+        /* --- SAFETY HARBOR BANNER --- */
+        .safety-banner-bottom {
+            position: fixed; bottom: 0; left: 0; width: 100%;
+            background: #1a1f36; color: #ffffff; padding: 12px;
+            text-align: center; font-size: 11px; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 0.05em;
+            border-top: 2px solid #635bff; z-index: 10002;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="top-training-banner">TRAINING MODE - SIMULATED DATA</div>
+
+    <div class="modal-overlay" id="warningModal">
+        <div class="modal-card">
+            <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 16px;">Reveal live key</h3>
+            <p style="font-size: 14px; color: #4f566b; line-height: 1.6; margin-bottom: 24px;">This key can only be revealed once to keep your account secure. Are you sure you want to reveal your key?</p>
+            <div style="display:flex; justify-content:flex-end; gap:12px;">
+                <button onclick="closeAll()" style="background:none; border:none; color:var(--stripe-slate); cursor:pointer; font-weight:600;">Cancel</button>
+                <button style="background:var(--stripe-red); color:white; border:none; padding:10px 18px; border-radius:6px; font-weight:600; cursor:pointer;" onclick="toVerify()">Reveal</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="verifyModal">
+        <div class="modal-card">
+            <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 16px;">Verify identity</h3>
+            <p style="font-size: 14px; color: #4f566b; line-height: 1.6; margin-bottom: 24px;">Link will be sent to:<br><strong class="dynamic-email">trainee@example.com</strong></p>
+            <button style="background:var(--stripe-purple); color:white; border:none; padding:10px 18px; border-radius:6px; float:right; cursor:pointer; font-weight:600;" onclick="toEmailCheck()">Send verification ↗</button>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="emailCheckModal">
+        <div class="modal-card">
+            <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 16px;">Check email</h3>
+            <p style="font-size: 14px; color: #4f566b; line-height: 1.6; margin-bottom: 24px;">Verification sent! Check your inbox to reveal the key. Leave this window open.</p>
+            <button style="background:var(--stripe-purple); color:white; border:none; padding:10px 18px; border-radius:6px; float:right; cursor:pointer; font-weight:600;" onclick="openInbox()">Open Gmail ↗</button>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="phoneVerifyModal">
+        <div class="modal-card">
+            <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 16px;">Verification required</h3>
+            <p style="font-size: 14px; color: #4f566b; line-height: 1.6; margin-bottom: 12px;">Enter the 6-digit verification code sent to your <strong>phone ending in 2366</strong>.</p>
+            <p style="font-size: 11px; color: #a3acb9; margin-bottom: 10px;">(Indication: Use this code 123456)</p>
+            <div id="phoneSpinner" class="spinner"></div>
+            <input type="text" id="phoneCodeInput" class="code-input" maxlength="6" placeholder="000000">
+            <div id="phoneError" style="color: #df1b41; font-size: 13px; display: none; text-align:center; margin-bottom:10px;">Incorrect code. Please check the indication.</div>
+            <div style="display:flex; justify-content: space-between; align-items: center; margin-top: 20px;">
+                <button onclick="closeAll()" style="background:none; border:none; color:var(--stripe-purple); cursor:pointer; font-weight:600;">Cancel</button>
+                <button id="phoneContinueBtn" style="background:var(--stripe-purple); color:white; border:none; padding:10px 24px; border-radius:6px; font-weight:600; cursor:pointer;" onclick="validatePhoneCode()">Continue</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="finalRevealModal">
+        <div class="modal-card">
+            <h3 style="font-weight:700; margin-bottom:8px;">Reveal live key</h3>
+            <p style="font-size: 13px; color: #4f566b; margin-bottom: 16px;">Make sure to store this key in a safe place. You won't be able to see it again.<br><span style="color:var(--stripe-purple);">Learn more about keeping your keys safe ↗</span></p>
+            
+            <div class="copy-container" onclick="copyToClipboard('sk_live_FOR TRAINING PURPOSES ONLY – STRICT USE POLICY', 'modalKeyTooltip')">
+                <div class="key-box">sk_live_FOR TRAINING PURPOSES ONLY – STRICT USE POLICY</div>
+                <span class="tooltiptext" id="modalKeyTooltip">Copy</span>
+            </div>
+            
+            <p style="font-weight:600; margin-bottom:8px;">Add a note</p>
+            <textarea class="note-area" placeholder="Add a note to identify this key..."></textarea>
+            
+            <div style="display:flex; justify-content: flex-end;">
+                <button style="background:var(--stripe-purple); color:white; border:none; padding:10px 24px; border-radius:6px; font-weight:600; cursor:pointer;" onclick="finishReveal()">Save</button>
+            </div>
+            <div onclick="closeAll()" style="position:absolute; top:20px; right:20px; cursor:pointer; opacity:0.5;">✕</div>
+        </div>
+    </div>
+
+    <div class="layout-container">
+        <aside class="sidebar">
+            <div class="account-switcher"><div class="acc-avatar">S</div><div class="acc-name">Stripe Live Training</div><span style="opacity: 0.5;">▼</span></div>
+            <div class="nav-item">🏠 Home</div>
+            <div class="nav-item">📊 Balances</div>
+            <div class="nav-item">🔄 Transactions</div>
+            <div class="nav-item">👤 Customers</div>
+            <div class="nav-item">📦 Product catalog</div>
+            <div class="nav-group-label">Products</div>
+            <div class="nav-item">💳 Payments <span style="margin-left:auto; opacity:0.5;">▼</span></div>
+            <div class="nav-item">🧾 Billing <span style="margin-left:auto; opacity:0.5;">▼</span></div>
+            <div class="nav-item active" style="color:var(--stripe-purple); font-weight:600;">📈 Reporting <span style="margin-left:auto;">▼</span></div>
+            <div class="nav-item">... More <span style="opacity:0.5;">▼</span></div>
+
+            <div class="dev-popup" id="devMenu">
+                <div class="menu-section">
+                    <div class="section-label">Workbench</div>
+                    <a class="menu-item">Overview</a>
+                    <a class="menu-item">Webhooks</a>
+                    <a class="menu-item">Events</a>
+                    <a class="menu-item">Logs</a>
+                    <a class="menu-item">More <span class="icon-right">›</span></a>
+                </div>
+                <div class="menu-section">
+                    <div class="section-label">Documentation</div>
+                    <a class="menu-item">API reference ↗</a>
+                    <a class="menu-item">SDKs ↗</a>
+                    <a class="menu-item">Stripe.js ↗</a>
+                    <a class="menu-item">CLI ↗</a>
+                </div>
+                <div class="menu-section">
+                    <a href="api_keys.html" class="menu-item" style="font-weight: 600;">API keys</a>
+                    <a class="menu-item">Created apps</a>
+                    <a class="menu-item">Developer settings</a>
+                </div>
+            </div>
+
+            <div class="sidebar-footer" id="devTrigger">
+                <div style="display:flex; align-items:center; gap:12px;"><div style="width:20px; height:20px; border:1.5px solid var(--stripe-purple); border-radius:4px; display:flex; align-items:center; justify-content:center; color:var(--stripe-purple); font-size:10px; font-weight:bold;">▾</div><span style="font-weight:700; color:var(--stripe-slate); text-transform:uppercase;">Developers</span></div>
+            </div>
+        </aside>
+
+        <main class="main">
+            <header class="top-bar">
+                <div class="search-wrapper">🔍 <input type="text" style="border:none; background:transparent; outline:none; width: 100%;" placeholder="Search"></div>
+                <div class="header-icons">
+                    <span class="icon-btn" style="color:#df1b41; font-weight:bold;">?</span>
+                    <span class="icon-btn">🔔</span>
+                    <span class="icon-btn">⚙️</span>
+                    <div class="profile-btn">S</div>
+                    <div class="plus-circle">+</div>
+                </div>
+            </header>
+
+            <div class="content-scroll">
+                <h1 style="font-size: 24px; font-weight: 700; margin-bottom: 24px;">Developers</h1>
+                <nav class="tabs"><div class="tab-link active">API keys</div><div class="tab-link">Created apps</div></nav>
+
+                <div class="section-header">
+                    <div><h3 style="font-size: 18px; font-weight: 700;">Restricted keys</h3><p style="color:var(--stripe-slate); margin-top:4px;">Create a key with specific access limits.</p></div>
+                    <button class="btn-create">+ Create restricted key</button>
+                </div>
+                <table class="key-table">
+                    <thead><tr><th style="width:22%">Name</th><th style="width:48%">Token</th><th style="width:15%">Last used</th><th style="width:15%">Created</th></tr></thead>
+                    <tbody><tr><td style="font-weight: 500;">Restricted key ℹ️</td><td id="resCell"><button class="reveal-btn" onclick="startFlow('resCell')">Reveal live key</button></td><td>—</td><td>Apr 19</td></tr></tbody>
+                </table>
+
+                <div class="section-header" style="margin-top: 60px;"><div><h3 style="font-size: 18px; font-weight: 700;">Standard keys</h3></div><button class="btn-create">+ Create secret key</button></div>
+                <table class="key-table">
+                    <thead><tr><th style="width:22%">Name</th><th style="width:48%">Token</th><th style="width:15%">Last used</th><th style="width:15%">Created</th></tr></thead>
+                    <tbody>
+                        <tr>
+                            <td style="font-weight: 500;">Publishable key</td>
+                            <td>
+                                <div class="copy-container" onclick="copyToClipboard('pk_live_FOR TRAINING PURPOSES ONLY – STRICT USE POLICY', 'pkTooltip')">
+                                    <span style="font-family:monospace; color:#4f566b;">pk_live_FOR TRAINING PURPOSES ONLY – STRICT USE POLICY</span>
+                                    <span class="tooltiptext" id="pkTooltip">Copy</span>
+                                </div>
+                            </td>
+                            <td>Apr 19</td>
+                            <td>Apr 18</td>
+                        </tr>
+                        <tr><td style="font-weight: 500;">Secret key</td><td id="secCell"><button class="reveal-btn" onclick="startFlow('secCell')">Reveal live key</button></td><td>—</td><td>Apr 19</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <div class="safety-banner-bottom">
+        ⚠️ TRAINING SIMULATION: DO NOT ENTER REAL FINANCIAL OR SENSITIVE DATA.
+    </div>
+
+    <script>
+        let targetId = '';
+        const PHONE_CODE = "123456"; 
+
+        const savedEmail = localStorage.getItem('user_training_email') || 'trainee@example.com';
+        document.querySelectorAll('.dynamic-email').forEach(el => el.innerText = savedEmail);
+
+        function startFlow(id) { targetId = id; document.getElementById('warningModal').style.display = 'flex'; }
+        function toVerify() { document.getElementById('warningModal').style.display = 'none'; document.getElementById('verifyModal').style.display = 'flex'; }
+        function toEmailCheck() { document.getElementById('verifyModal').style.display = 'none'; document.getElementById('emailCheckModal').style.display = 'flex'; }
+        function openInbox() { window.open('verification_email.html', '_blank'); closeAll(); }
+        function closeAll() { document.querySelectorAll('.modal-overlay').forEach(m => m.style.display = 'none'); }
+
+        window.onload = function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('step') === 'phone') {
+                document.getElementById('phoneVerifyModal').style.display = 'flex';
+            }
+        };
+
+        function validatePhoneCode() {
+            const input = document.getElementById('phoneCodeInput').value;
+            const btn = document.getElementById('phoneContinueBtn');
+            const spinner = document.getElementById('phoneSpinner');
+            
+            btn.style.display = 'none';
+            spinner.style.display = 'block';
+            
+            setTimeout(() => {
+                if (input === PHONE_CODE) {
+                    document.getElementById('phoneVerifyModal').style.display = 'none';
+                    document.getElementById('finalRevealModal').style.display = 'flex';
+                } else {
+                    spinner.style.display = 'none';
+                    btn.style.display = 'block';
+                    document.getElementById('phoneError').style.display = 'block';
+                }
+            }, 1200);
+        }
+
+        function finishReveal() {
+            const keyText = "sk_live_FOR TRAINING PURPOSES ONLY – STRICT USE POLICY";
+            const secCell = document.getElementById('secCell');
+            
+            secCell.innerHTML = `
+                <div class="copy-container" onclick="copyToClipboard('${keyText}', 'tableTooltip')">
+                    <span style="font-family:monospace; color:#4f566b;">${keyText}</span>
+                    <span class="tooltiptext" id="tableTooltip">Copy</span>
+                </div>`;
+            closeAll();
+        }
+
+        function copyToClipboard(text, tooltipId) {
+            navigator.clipboard.writeText(text).then(() => {
+                const tooltip = document.getElementById(tooltipId);
+                if(tooltip) {
+                    tooltip.innerHTML = "Copied!";
+                    tooltip.style.visibility = "visible";
+                    tooltip.style.opacity = "1";
+                    setTimeout(() => {
+                        tooltip.innerHTML = "Copy";
+                        tooltip.style.visibility = "";
+                        tooltip.style.opacity = "";
+                    }, 2000);
+                }
+            });
+        }
+
+        const devTrigger = document.getElementById('devTrigger');
+        const devMenu = document.getElementById('devMenu');
+        devTrigger.onclick = (e) => { e.stopPropagation(); devMenu.style.display = devMenu.style.display === 'flex' ? 'none' : 'flex'; };
+        document.onclick = (e) => { if (devMenu && !devMenu.contains(e.target) && e.target !== devTrigger) devMenu.style.display = 'none'; };
+    </script>
+</body>
+</html>

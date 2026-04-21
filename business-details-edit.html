@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Edit business details - Stripe Payment Training</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --stripe-purple: #635bff;
+            --stripe-dark: #1a1f36;
+            --stripe-slate: #4f566b;
+            --stripe-border: #e6e6e6;
+            --banner-bg: #1a1f36;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif !important; -webkit-font-smoothing: antialiased; letter-spacing: -0.011em; }
+        
+        body { 
+            background-color: #fff; 
+            color: var(--stripe-dark); 
+            line-height: 1.4;
+            /* Space for bottom banner */
+            padding-bottom: 60px; 
+        }
+
+        /* --- BOTTOM SAFETY BANNER --- */
+        .training-banner { 
+            width: 100%; 
+            background: var(--banner-bg); 
+            color: #ffffff; 
+            padding: 12px; 
+            text-align: center; 
+            font-size: 11px; 
+            font-weight: 600; 
+            position: fixed; 
+            bottom: 0; 
+            left: 0;
+            text-transform: uppercase; 
+            letter-spacing: 0.05em; 
+            z-index: 9999;
+            border-top: 2px solid var(--stripe-purple);
+        }
+
+        .header { display: flex; align-items: center; padding: 15px 25px; border-bottom: 1px solid var(--stripe-border); font-size: 14px; position: sticky; top: 0; background: white; z-index: 100; }
+        .close-btn { font-size: 18px; margin-right: 20px; cursor: pointer; color: var(--stripe-slate); text-decoration: none; }
+        
+        .container { display: flex; max-width: 1000px; margin: 0 auto; padding-top: 50px; padding-left: 20px; }
+        
+        .stepper { width: 280px; padding-right: 40px; position: sticky; top: 100px; height: fit-content; }
+        .step { display: flex; align-items: center; gap: 12px; margin-bottom: 25px; font-size: 14px; color: var(--stripe-slate); }
+        .circle { width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--stripe-border); display: flex; align-items: center; justify-content: center; font-size: 10px; }
+        .circle.checked { background: var(--stripe-purple); border-color: var(--stripe-purple); color: white; }
+        .line { width: 2px; height: 25px; background: var(--stripe-purple); margin-left: 9px; margin-top: -20px; margin-bottom: 5px; }
+        
+        .main-content { flex: 1; max-width: 540px; }
+        h1 { font-size: 28px; font-weight: 700; margin-bottom: 30px; letter-spacing: -0.02em; }
+        
+        .form-group { margin-bottom: 25px; }
+        label { font-weight: 600; font-size: 14px; display: block; margin-bottom: 8px; }
+        
+        input, select { width: 100%; padding: 10px 12px; border: 1px solid var(--stripe-border); border-radius: 4px; font-size: 14px; margin-bottom: 10px; outline-color: var(--stripe-purple); color: var(--stripe-dark); }
+        
+        .requirements-box { display: flex; gap: 12px; background: #fcfcfd; border: 1px solid #f2f2f4; padding: 12px; border-radius: 4px; margin-bottom: 20px; }
+        .req-list { list-style: disc; margin-left: 18px; font-size: 13px; color: var(--stripe-slate); }
+        
+        .save-btn { background: var(--stripe-purple); color: white; border: none; padding: 10px 0; width: 100%; border-radius: 4px; font-weight: 600; cursor: pointer; font-size: 14px; margin-top: 20px; display: block; text-align: center; transition: background 0.15s; }
+        .save-btn:hover { background: #4339ca; }
+        
+        .cancel-btn { background: white; color: var(--stripe-slate); border: 1px solid var(--stripe-border); padding: 10px 0; width: 100%; border-radius: 4px; font-weight: 600; cursor: pointer; font-size: 14px; margin-top: 10px; display: block; text-align: center; text-decoration: none; }
+        .cancel-btn:hover { background: #f6f9fc; color: var(--stripe-dark); }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <a href="activate.html" class="close-btn">✕</a>
+        <span>Activate your account</span>
+    </div>
+
+    <div class="container">
+        <div class="stepper">
+            <div class="step"><div class="circle checked">✓</div> Verify your business</div><div class="line"></div>
+            <div class="step"><div class="circle checked">✓</div> Add your bank</div><div class="line"></div>
+            <div class="step"><div class="circle checked">✓</div> Add extras</div><div class="line"></div>
+            <div class="step" style="color: var(--stripe-dark); font-weight: 600;"><div class="circle">4</div> Review and submit</div>
+        </div>
+        
+        <div class="main-content">
+            <h1>Edit business details</h1>
+            
+            <div class="form-group">
+                <label>Business name</label>
+                <input type="text" id="bizNameInput" value="Stripe Payment Training">
+            </div>
+            
+            <div class="form-group">
+                <label>Business address</label>
+                <select disabled><option>United States</option></select>
+                <input type="text" id="streetInput" value="1286 Fannie Street">
+                <input type="text" id="cityInput" value="Bay City">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <input type="text" id="stateInput" value="TX">
+                    <input type="text" id="zipInput" value="77414">
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>Business website</label>
+                <input type="text" id="websiteInput" value="stripepaymenttraining.warhead.com">
+                <div class="requirements-box">
+                    <div style="color: #a3acb9; font-weight: bold;">i</div>
+                    <div>
+                        <p style="font-size: 13px; color: var(--stripe-slate); margin-bottom: 4px;">Your website must:</p>
+                        <ul class="req-list">
+                            <li>Be viewable and not password-protected</li>
+                            <li>Match the business name provided</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <button onclick="saveChanges()" class="save-btn">Save Training Data</button>
+            <a href="activate.html" class="cancel-btn">Cancel</a>
+        </div>
+    </div>
+
+    <div class="training-banner">
+        Simulation Mode: This site is only intended for training purposes for new hires.
+    </div>
+
+    <script>
+        function saveChanges() {
+            const bizName = document.getElementById('bizNameInput').value;
+            const webVal = document.getElementById('websiteInput').value;
+            const street = document.getElementById('streetInput').value;
+            const city = document.getElementById('cityInput').value;
+            const state = document.getElementById('stateInput').value;
+            const zip = document.getElementById('zipInput').value;
+
+            // Format Address
+            const formattedAddr = `${street}, ${city}<br>${state} ${zip} US`;
+
+            // Save to SessionStorage
+            sessionStorage.setItem('storedBusinessName', bizName);
+            sessionStorage.setItem('storedWebsite', webVal);
+            sessionStorage.setItem('storedAddress', formattedAddr);
+
+            // localStorage for clean-URL display
+            let cleanWeb = webVal.replace('.warhead.com', '');
+            localStorage.setItem('customWebsite', cleanWeb);
+
+            // Redirect back
+            window.location.href = 'activate.html';
+        }
+    </script>
+</body>
+</html>

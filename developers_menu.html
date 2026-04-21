@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Developers Menu - Stripe Live Training</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --stripe-purple: #635bff;
+            --stripe-dark: #1a1f36;
+            --stripe-slate: #4f566b;
+            --stripe-border: #eeeeee;
+            --stripe-bg: #ffffff;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
+        
+        body { background-color: #f6f9fc; height: 100vh; display: flex; align-items: flex-end; padding: 20px; }
+
+        /* Pop-up Menu Container matching image_502de5.png */
+        .dev-popup {
+            width: 240px;
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 15px 35px rgba(50,50,93,.1), 0 5px 15px rgba(0,0,0,.07);
+            border: 1px solid var(--stripe-border);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            animation: slideUp 0.2s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(10px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .menu-section {
+            padding: 8px 0;
+            border-bottom: 1px solid var(--stripe-border);
+        }
+        .menu-section:last-child { border-bottom: none; }
+
+        .section-label {
+            padding: 8px 16px;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--stripe-slate);
+            text-transform: uppercase;
+            letter-spacing: 0.025em;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 16px;
+            font-size: 13.5px;
+            color: var(--stripe-dark);
+            text-decoration: none;
+            cursor: pointer;
+            transition: background 0.1s;
+        }
+
+        .menu-item:hover {
+            background: #f6f9fc;
+            color: var(--stripe-purple);
+        }
+
+        .menu-item span {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .external-icon {
+            font-size: 12px;
+            color: var(--stripe-slate);
+            opacity: 0.5;
+        }
+
+        /* Footer Toggle Area */
+        .dev-footer {
+            padding: 12px 16px;
+            background: #fff;
+            border-top: 1px solid var(--stripe-border);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--stripe-slate);
+            cursor: pointer;
+        }
+
+        .dev-icon-box {
+            width: 20px;
+            height: 20px;
+            border: 1.5px solid #a3acb9;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="dev-popup">
+        <div class="menu-section">
+            <div class="section-label">Workbench</div>
+            <a href="#" class="menu-item">Overview</a>
+            <a href="#" class="menu-item">Webhooks</a>
+            <a href="#" class="menu-item">Events</a>
+            <a href="#" class="menu-item">Logs</a>
+            <a href="#" class="menu-item">More <span style="font-size: 10px;">›</span></a>
+        </div>
+
+        <div class="menu-section">
+            <div class="section-label">Documentation</div>
+            <a href="#" class="menu-item">API reference <span class="external-icon">↗</span></a>
+            <a href="#" class="menu-item">SDKs <span class="external-icon">↗</span></a>
+            <a href="#" class="menu-item">Stripe.js <span class="external-icon">↗</span></a>
+            <a href="#" class="menu-item">CLI <span class="external-icon">↗</span></a>
+        </div>
+
+        <div class="menu-section">
+            <a href="#" class="menu-item">API keys</a>
+            <a href="#" class="menu-item">Created apps</a>
+            <a href="#" class="menu-item">Developer settings</a>
+        </div>
+
+        <div class="dev-footer" onclick="window.history.back()">
+            <div class="dev-icon-box">▶</div>
+            Developers
+        </div>
+    </div>
+
+</body>
+</html>

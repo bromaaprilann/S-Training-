@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Dashboard - Stripe Training</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --stripe-purple: #635bff;
+            --stripe-dark: #1a1f36;
+            --stripe-slate: #4f566b;
+            --stripe-border: #e6e6e6;
+            --stripe-bg: #f7f9fc;
+            --banner-bg: #1a1f36;
+        }
+
+        /* --- GLOBAL RESET --- */
+        ::-webkit-scrollbar { display: none; }
+        * { 
+            box-sizing: border-box; 
+            margin: 0; 
+            padding: 0; 
+            -webkit-font-smoothing: antialiased; 
+            -moz-osx-font-smoothing: grayscale;
+            font-family: 'Inter', sans-serif !important; 
+        }
+
+        body { 
+            background-color: var(--stripe-bg); 
+            display: flex; 
+            flex-direction: column; 
+            height: 100vh; 
+            color: var(--stripe-dark); 
+            overflow: hidden; 
+            font-size: 13.5px; 
+            line-height: 1.5;
+            letter-spacing: -0.012em; 
+        }
+
+        /* --- SIMULATION WATERMARK --- */
+        body::before {
+            content: "INTERNAL TRAINING SIMULATION ONLY";
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%) rotate(-30deg);
+            font-size: 4.5rem;
+            color: rgba(0, 0, 0, 0.02);
+            font-weight: 900;
+            z-index: 0;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+
+        /* --- BOTTOM SAFETY BANNER --- */
+        .training-banner { 
+            width: 100%; 
+            background: var(--banner-bg); 
+            color: #ffffff; 
+            padding: 10px; 
+            text-align: center; 
+            font-size: 11px; 
+            font-weight: 600; 
+            position: fixed; 
+            bottom: 0; 
+            left: 0;
+            text-transform: uppercase; 
+            letter-spacing: 0.05em; 
+            z-index: 9999;
+            border-top: 2px solid var(--stripe-purple);
+        }
+
+        /* Sandbox Banner */
+        .sandbox-banner { 
+            background: #0a2540; color: white; height: 40px; 
+            display: flex; align-items: center; justify-content: space-between; 
+            padding: 0 20px; font-size: 13px; z-index: 1000; letter-spacing: -0.01em; 
+            flex-shrink: 0;
+        }
+        .banner-left { display: flex; align-items: center; gap: 8px; }
+        .btn-switch-live { background: var(--stripe-purple); color: white; border: none; padding: 6px 14px; border-radius: 4px; font-size: 12px; font-weight: 600; cursor: pointer; transition: background 0.1s; }
+        .btn-switch-live:hover { background: #4339ca; }
+
+        /* Layout Wrapper */
+        .wrapper { 
+            display: flex; 
+            flex: 1; 
+            overflow: hidden; 
+            padding-bottom: 40px; /* Space for the bottom banner */
+        }
+        
+        /* Sidebar */
+        .sidebar { width: 240px; background: #fff; border-right: 1px solid var(--stripe-border); padding: 12px 0; display: flex; flex-direction: column; flex-shrink: 0; }
+        .nav-header { padding: 12px 20px 24px; font-weight: 700; display: flex; align-items: center; gap: 10px; font-size: 14.5px; color: var(--stripe-dark); letter-spacing: -0.025em; }
+        .nav-item { padding: 7px 20px; font-size: 13.5px; color: var(--stripe-slate); cursor: pointer; display: flex; align-items: center; gap: 12px; font-weight: 500; text-decoration: none; }
+        .nav-item:hover { background: #f6f9fc; color: var(--stripe-dark); }
+        .nav-item.active { color: var(--stripe-purple); background: #f6f9fc; border-right: 3px solid var(--stripe-purple); font-weight: 600; }
+        
+        .section-label { padding: 24px 20px 8px; font-size: 11px; text-transform: uppercase; color: #a3acb9; font-weight: 700; letter-spacing: 0.05em; }
+
+        /* Main Content Area */
+        .main { flex: 1; display: flex; flex-direction: column; position: relative; background: #fff; overflow: hidden; }
+        .top-bar { height: 54px; border-bottom: 1px solid var(--stripe-border); display: flex; justify-content: space-between; align-items: center; padding: 0 32px; flex-shrink: 0;}
+        .search-area { background: #f2f2f2; padding: 6px 14px; border-radius: 6px; width: 320px; color: #a3acb9; font-size: 13.5px; font-weight: 400; }
+        
+        .utility-icons { display: flex; align-items: center; gap: 20px; font-size: 16px; }
+        .profile-btn-plus { width: 24px; height: 24px; background: var(--stripe-purple); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 600; cursor: pointer; }
+
+        .content-scroll { flex: 1; padding: 48px 64px; overflow-y: auto; }
+        .dashboard-grid { display: grid; grid-template-columns: 1fr 300px; gap: 64px; }
+
+        /* Typography */
+        h1 { font-size: 28px; margin-bottom: 40px; font-weight: 700; letter-spacing: -0.035em; color: var(--stripe-dark); }
+        .stats-row { display: flex; gap: 100px; margin-bottom: 48px; }
+        .stat-group .label { font-size: 13.5px; color: var(--stripe-slate); margin-bottom: 8px; display: flex; align-items: center; gap: 6px; font-weight: 500; }
+        .stat-group .amount { font-size: 24px; font-weight: 700; letter-spacing: -0.02em; color: var(--stripe-dark); }
+        .sub-label { font-size: 11px; color: #a3acb9; font-weight: 500; }
+
+        /* Chart Area */
+        .chart-section { margin-bottom: 40px; position: relative; }
+        .descriptor-text { position: absolute; top: -25px; left: 50%; transform: translateX(-50%); font-size: 11px; font-weight: 700; color: var(--stripe-purple); text-transform: uppercase; letter-spacing: 0.08em; }
+        .chart-time-labels { display: flex; justify-content: space-between; color: #a3acb9; font-size: 11px; font-weight: 600; padding-top: 8px; }
+
+        /* Cards */
+        .rec-card { background: #f6f9fc; border: 1px solid var(--stripe-border); border-radius: 8px; padding: 24px; height: fit-content; }
+        .rec-card-header { display: flex; justify-content: space-between; font-size: 11.5px; font-weight: 700; color: var(--stripe-slate); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 24px; }
+        .rec-item { margin-bottom: 20px; }
+        .rec-title { font-weight: 600; color: var(--stripe-dark); margin-bottom: 4px; display: block; }
+        .rec-desc { font-size: 13px; color: var(--stripe-slate); display: block; }
+
+        /* Toast */
+        .setup-toast { position: absolute; bottom: 24px; right: 24px; width: 260px; background: white; border: 1px solid var(--stripe-border); border-radius: 8px; padding: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .setup-toast-label { font-size: 11px; font-weight: 700; color: #a3acb9; text-transform: uppercase; letter-spacing: 0.05em; display: flex; justify-content: space-between; margin-bottom: 8px; }
+        .progress-bar-bg { width: 100%; height: 4px; background: #f2f2f2; border-radius: 2px; }
+        .progress-bar-fill { height: 4px; width: 35%; background: var(--stripe-purple); border-radius: 2px; }
+    </style>
+</head>
+<body>
+
+    <div class="sandbox-banner">
+        <div class="banner-left">
+            <span>Sandbox</span> <span style="opacity:0.7">ⓘ</span>
+            <span style="margin-left: 20px; opacity: 0.8; font-weight: 400;">You're testing in a sandbox—experiment freely with simulation data.</span>
+        </div>
+        <button class="btn-switch-live" onclick="location.href='activate.html'">Switch to live account</button>
+    </div>
+
+    <div class="wrapper">
+        <nav class="sidebar">
+            <div class="nav-header">
+                <span style="background:var(--stripe-purple); color:white; width:24px; height:24px; display:flex; align-items:center; justify-content:center; border-radius:4px; font-size:12px; font-weight:800;">S</span>
+                Stripe Training
+            </div>
+            
+            <a href="dashboard.html" class="nav-item active">🏠 Home</a>
+            <div class="nav-item">📊 Balances</div>
+            <div class="nav-item">🔄 Transactions</div>
+            <div class="nav-item">👥 Customers</div>
+            <div class="nav-item">📦 Product catalog</div>
+
+            <div class="section-label">Products</div>
+            <div class="nav-item">💳 Payments</div>
+            <div class="nav-item">🧾 Billing</div>
+            <div class="nav-item">📈 Reporting</div>
+            <div class="nav-item">⚙️ Connect</div>
+            
+            <div class="section-label">Settings</div>
+            <a href="business_settings.html" class="nav-item">🏢 Business</a>
+        </nav>
+
+        <main class="main">
+            <header class="top-bar">
+                <div class="search-area">🔍 Search settings</div>
+                <div class="utility-icons">
+                    <span style="opacity: 0.6; cursor: pointer;">❓</span>
+                    <span style="opacity: 0.6; cursor: pointer;">🔔</span>
+                    <a href="business_settings.html" style="text-decoration:none; opacity: 0.6;">⚙️</a>
+                    <div class="profile-btn-plus">+</div>
+                </div>
+            </header>
+
+            <div class="content-scroll">
+                <div class="dashboard-grid">
+                    <div class="left-col">
+                        <h1>Today</h1>
+                        
+                        <div class="stats-row">
+                            <div class="stat-group">
+                                <div class="label">Gross volume <span style="font-size: 10px; opacity: 0.5;">▼</span></div>
+                                <div class="amount">$0.00</div>
+                                <div class="sub-label">Simulation Data</div>
+                            </div>
+                            <div class="stat-group">
+                                <div class="label">Yesterday <span style="font-size: 10px; opacity: 0.5;">▼</span></div>
+                                <div class="amount">$0.00</div>
+                            </div>
+                        </div>
+
+                        <div class="chart-section">
+                            <div class="descriptor-text">Volume Overview</div>
+                            <div style="width: 100%; height: 1px; background: #f2f2f2; position: relative; margin: 30px 0 10px;">
+                                <div style="position: absolute; left: 0; width: 0%; height: 2px; background: var(--stripe-purple); top: -1px;"></div>
+                            </div>
+                            <div class="chart-time-labels"><span>12:00 AM</span><span>12:00 AM</span></div>
+                        </div>
+
+                        <div style="display: flex; gap: 100px; border-top: 1px solid #f2f2f2; padding-top: 32px;">
+                            <div class="stat-group">
+                                <div class="label">USD balance <span style="color:var(--stripe-purple); font-size: 12.5px; cursor:pointer; margin-left:8px; font-weight:600;">View</span></div>
+                                <div class="amount" style="font-size: 19px;">$0.00</div>
+                            </div>
+                            <div class="stat-group">
+                                <div class="label">Payouts <span style="color:var(--stripe-purple); font-size: 12.5px; cursor:pointer; margin-left:8px; font-weight:600;">View</span></div>
+                                <div style="width: 24px; border-bottom: 2.5px solid var(--stripe-dark); margin-top: 14px;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="right-col">
+                        <div class="rec-card">
+                            <div class="rec-card-header">
+                                <span>Recommended for you</span>
+                                <span style="cursor:pointer">✕</span>
+                            </div>
+                            <div class="rec-item">
+                                <span class="rec-title">Activate your account</span>
+                                <span class="rec-desc">Complete your business profile to start accepting live payments.</span>
+                            </div>
+                            <div class="rec-item">
+                                <span class="rec-title">Get your API keys</span>
+                                <span class="rec-desc">Use your test keys to start integrating Stripe.</span>
+                            </div>
+                            <div class="rec-item">
+                                <span class="rec-title">Try Checkout</span>
+                                <span class="rec-desc">Explore our pre-built payment page.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="setup-toast">
+                <div class="setup-toast-label">
+                    <span>Setup progress</span>
+                    <span>35%</span>
+                </div>
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div class="training-banner">
+        ⚠️ TRAINING SIMULATION: DO NOT ENTER REAL FINANCIAL OR SENSITIVE DATA.
+    </div>
+
+</body>
+</html>

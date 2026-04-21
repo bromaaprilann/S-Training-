@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>TRAINING PORTAL - Sign In</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --stripe-purple: #635bff;
+            --stripe-dark: #1a1f36;
+            --stripe-slate: #4f566b;
+            --stripe-bg: #f6f9fc;
+            --stripe-border: #e3e8ee;
+            --banner-bg: #1a1f36;
+        }
+
+        /* --- GLOBAL RESET --- */
+        * { 
+            box-sizing: border-box; 
+            margin: 0;
+            padding: 0;
+            -webkit-font-smoothing: antialiased; 
+            -moz-osx-font-smoothing: grayscale;
+            font-family: 'Inter', sans-serif !important; 
+        }
+
+        body { 
+            background-color: var(--stripe-bg); 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            height: 100vh; 
+            color: var(--stripe-dark);
+            font-size: 13.5px;
+            line-height: 1.5;
+            letter-spacing: -0.012em;
+            padding-bottom: 40px; 
+            position: relative;
+        }
+
+        /* --- SIMULATION WATERMARK --- */
+        body::before {
+            content: "INTERNAL TRAINING SIMULATION ONLY";
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%) rotate(-30deg);
+            font-size: 4.5rem;
+            color: rgba(0, 0, 0, 0.02);
+            font-weight: 900;
+            z-index: 0;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+
+        /* --- BOTTOM SAFETY BANNER --- */
+        .training-banner { 
+            width: 100%; 
+            background: var(--banner-bg); 
+            color: #ffffff; 
+            padding: 12px; 
+            text-align: center; 
+            font-size: 11px; 
+            font-weight: 700; 
+            position: fixed; 
+            bottom: 0; 
+            left: 0;
+            text-transform: uppercase; 
+            letter-spacing: 0.05em; 
+            z-index: 9999;
+            border-top: 2px solid var(--stripe-purple);
+        }
+
+        .wrapper { 
+            background: white; 
+            width: 420px; 
+            border-radius: 8px; 
+            box-shadow: 0 15px 35px rgba(50,50,93,.1), 0 5px 15px rgba(0,0,0,.07); 
+            padding: 48px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .logo { 
+            font-weight: 700; 
+            font-size: 21px; 
+            color: var(--stripe-purple); 
+            margin-bottom: 24px; 
+            letter-spacing: -0.03em;
+        }
+
+        h1 { 
+            font-size: 24px; 
+            font-weight: 700;
+            margin-bottom: 32px; 
+            color: var(--stripe-dark);
+            letter-spacing: -0.025em;
+        }
+
+        .input-group { margin-bottom: 24px; }
+        .input-group label { display: block; font-size: 13.5px; font-weight: 500; margin-bottom: 8px; color: var(--stripe-slate); }
+        .input-group input { width: 100%; padding: 10px 14px; border: 1px solid var(--stripe-border); border-radius: 4px; font-size: 15px; outline: none; transition: border-color 0.15s, box-shadow 0.15s; color: var(--stripe-dark); }
+        .input-group input:focus { border-color: var(--stripe-purple); box-shadow: 0 0 0 3px rgba(99, 91, 255, 0.1); }
+
+        .submit-btn { width: 100%; background-color: var(--stripe-purple); color: white; border: none; padding: 11px; border-radius: 4px; font-size: 15px; font-weight: 600; cursor: pointer; margin-top: 8px; transition: background 0.15s ease; }
+        .submit-btn:hover { background-color: #4339ca; }
+
+        .error-msg { color: #df1b41; font-size: 13px; margin-bottom: 20px; text-align: left; display: none; background: #fff1f3; padding: 12px; border-radius: 4px; font-weight: 500; }
+        
+        .disclaimer-bottom { 
+            margin-top: 32px; 
+            font-size: 12px; 
+            color: #a3acb9; 
+            text-align: center; 
+            line-height: 1.6; 
+        }
+    </style>
+</head>
+<body>
+
+    <div class="wrapper">
+        <div class="logo">Stripe Training</div>
+        <h1>Sign in to your account</h1>
+        
+        <form id="trainingAuth">
+            <p id="error" class="error-msg">Incorrect access code. Hint: Awesome@123</p>
+
+            <div class="input-group">
+                <label>Work Email (Training ID)</label>
+                <input type="email" id="trainee_id" placeholder="name@company.com" required>
+            </div>
+            
+            <div class="input-group">
+                <label>Access Code</label>
+                <input type="password" id="trainee_key" placeholder="Awesome@123" required>
+            </div>
+            
+            <button type="submit" class="submit-btn">Enter Training Portal</button>
+        </form>
+
+        <div class="disclaimer-bottom">
+            For security, please do not use real passwords.<br>
+            <b>Environment:</b> Local UI Simulation
+        </div>
+    </div>
+
+    <div class="training-banner">
+        ⚠️ TRAINING SIMULATION: DO NOT ENTER REAL FINANCIAL OR SENSITIVE DATA.
+    </div>
+
+    <script>
+        document.getElementById('trainingAuth').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = document.getElementById('trainee_id').value;
+            const code = document.getElementById('trainee_key').value;
+            
+            // Simulation validation
+            if (email.includes('@') && code === 'Awesome@123') {
+                localStorage.setItem('user_training_email', email);
+                
+                /* FIX: Now routing users to the Dashboard as requested */
+                window.location.href = 'dashboard.html';
+            } else {
+                document.getElementById('error').style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>

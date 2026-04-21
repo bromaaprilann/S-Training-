@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Business Details - Stripe Training</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --stripe-purple: #635bff;
+            --stripe-dark: #1a1f36;
+            --stripe-slate: #4f566b;
+            --stripe-border: #eeeeee;
+            --stripe-bg: #ffffff;
+            --stripe-search-bg: #f6f9fc;
+            --banner-bg: #1a1f36;
+        }
+
+        ::-webkit-scrollbar { display: none; }
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-font-smoothing: antialiased; letter-spacing: -0.012em; }
+        
+        body { 
+            background-color: var(--stripe-bg); 
+            display: flex; height: 100vh; color: var(--stripe-dark); 
+            overflow: hidden; font-family: 'Inter', sans-serif; font-size: 13px;
+            position: relative;
+        }
+
+        /* --- SIMULATION WATERMARK --- */
+        body::before {
+            content: "INTERNAL TRAINING SIMULATION ONLY";
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%) rotate(-30deg);
+            font-size: 4.5rem;
+            color: rgba(0, 0, 0, 0.02);
+            font-weight: 900;
+            z-index: 0;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+
+        /* Sidebar */
+        .sidebar { width: 260px; border-right: 1px solid var(--stripe-border); padding: 12px 0 0; flex-shrink: 0; background: #fff; display: flex; flex-direction: column; z-index: 10; position: relative; overflow: visible !important; }
+        .sidebar-header { display: flex; align-items: center; gap: 12px; padding: 12px 20px 24px; font-weight: 700; font-size: 17px; text-decoration: none; color: inherit; }
+        .s-logo { background: var(--stripe-purple); color: white; width: 26px; height: 26px; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 800; }
+        
+        .nav-item { padding: 8px 20px; font-size: 13.5px; color: var(--stripe-slate); cursor: pointer; display: flex; align-items: center; gap: 12px; text-decoration: none; }
+        .nav-item:hover { background: #f6f9fc; color: var(--stripe-dark); }
+        .nav-item.active { background: #f6f9fc; color: var(--stripe-purple); font-weight: 600; border-right: 3px solid var(--stripe-purple); }
+        .nav-group-label { padding: 20px 20px 8px; font-size: 11.5px; font-weight: 600; color: var(--stripe-slate); text-transform: uppercase; }
+        
+        /* Developer Button & Anchored Popup (FIXED VISIBILITY) */
+        .sidebar-footer { 
+            margin-top: auto; 
+            border-top: 1px solid var(--stripe-border); 
+            padding: 16px 20px; 
+            display: flex; align-items: center; gap: 12px; 
+            cursor: pointer; 
+            position: relative; 
+            background: #fff;
+            margin-bottom: 40px; /* Forces button above the safety banner */
+        }
+        .sidebar-footer:hover { background: #f6f9fc; }
+        .dev-icon-box { width: 22px; height: 22px; border: 1.5px solid #a3acb9; border-radius: 5px; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #a3acb9; transition: transform 0.2s; }
+        .dev-icon-box.open { transform: rotate(90deg); color: var(--stripe-purple); border-color: var(--stripe-purple); }
+        .dev-tag { font-size: 11px; font-weight: 700; color: var(--stripe-slate); text-transform: uppercase; letter-spacing: 0.05em; margin: 0; }
+
+        .dev-popup {
+            position: absolute; 
+            bottom: calc(100% + 5px); 
+            left: 10px; 
+            width: 240px; 
+            background: #ffffff; 
+            border-radius: 8px;
+            box-shadow: 0 15px 35px rgba(50,50,93,.1), 0 5px 15px rgba(0,0,0,.07); 
+            border: 1px solid var(--stripe-border);
+            display: none; 
+            flex-direction: column; 
+            z-index: 99999;
+        }
+        
+        .menu-section { padding: 12px 0; border-bottom: 1px solid var(--stripe-border); }
+        .menu-section:last-child { border-bottom: none; }
+        .section-label { padding: 0 16px 8px; font-size: 11px; font-weight: 700; color: var(--stripe-slate); text-transform: uppercase; }
+        .menu-item { display: flex; align-items: center; justify-content: space-between; padding: 8px 16px; font-size: 13.5px; color: var(--stripe-dark); text-decoration: none; }
+        .menu-item:hover { background: #f6f9fc; color: var(--stripe-purple); }
+        .external-icon { font-size: 14px; color: #a3acb9; margin-left: auto; font-family: sans-serif; font-weight: 400; }
+
+        /* Main Section */
+        .main { flex: 1; display: flex; flex-direction: column; min-width: 0; background: #fff; position: relative; z-index: 1; }
+        .top-bar { height: 54px; border-bottom: 1px solid var(--stripe-border); display: flex; align-items: center; justify-content: space-between; padding: 0 24px; background: #fff; flex-shrink: 0; }
+        .search-wrapper { background: var(--stripe-search-bg); border-radius: 6px; padding: 6px 12px; width: 320px; display: flex; align-items: center; gap: 10px; }
+        .search-input { border: none; background: transparent; outline: none; width: 100%; font-size: 13px; }
+        
+        .header-icons { display: flex; align-items: center; gap: 18px; }
+        .icon-btn { font-size: 17px; cursor: pointer; color: var(--stripe-slate); text-decoration: none; }
+        .plus-btn-circle { background: var(--stripe-purple); color: white; width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 600; cursor: pointer; }
+
+        .content-scroll { flex: 1; overflow-y: auto; padding: 48px 64px 120px; }
+        .page-title { font-size: 28px; font-weight: 700; margin-bottom: 32px; letter-spacing: -0.025em; }
+        
+        /* Tabs */
+        .tabs { display: flex; gap: 20px; border-bottom: 1px solid var(--stripe-border); margin-bottom: 40px; position: relative; overflow: visible; }
+        .tab-link { padding-bottom: 12px; font-size: 13.5px; color: var(--stripe-slate); text-decoration: none; border-bottom: 2px solid transparent; white-space: nowrap; cursor: pointer; }
+        .tab-link.active { color: var(--stripe-purple); font-weight: 600; border-bottom: 2px solid var(--stripe-purple); }
+
+        .dropdown-container { position: relative; display: inline-block; }
+        .dropdown-menu { 
+            position: absolute; top: 100%; left: 0; background: white; border: 1px solid var(--stripe-border); 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1); border-radius: 6px; z-index: 999; min-width: 170px; 
+            display: none; padding: 4px 0; margin-top: -1px;
+        }
+        .dropdown-item { padding: 8px 16px; font-size: 13px; color: var(--stripe-slate); cursor: pointer; text-decoration: none; display: block; }
+        .dropdown-item:hover { background: #f6f9fc; color: var(--stripe-dark); }
+
+        /* Block Layouts */
+        .settings-block { max-width: 1000px; margin-bottom: 48px; } 
+        .section-title-row { border-bottom: 1px solid var(--stripe-border); padding-bottom: 12px; margin-bottom: 20px; }
+        .section-title { font-size: 17px; font-weight: 700; color: var(--stripe-dark); }
+        
+        .subheading-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+        .section-subheading { font-size: 14px; font-weight: 600; color: var(--stripe-dark); }
+        .edit-link { color: var(--stripe-purple); font-size: 13.5px; font-weight: 600; cursor: pointer; text-decoration: none; }
+
+        .data-row { display: grid; grid-template-columns: 240px 1fr; margin-bottom: 16px; font-size: 13.5px; align-items: flex-start; }
+        .data-label { color: var(--stripe-slate); font-weight: 600; font-size: 13px; }
+        .data-value { color: var(--stripe-dark); line-height: 1.5; }
+
+        .management-card { border: 1px solid var(--stripe-border); border-radius: 8px; padding: 16px; margin-bottom: 20px; background: #fff; margin-top: 12px; }
+        .card-title { font-weight: 600; font-size: 13.5px; margin-bottom: 4px; color: var(--stripe-dark); }
+        .card-subtext { color: var(--stripe-slate); font-size: 13px; line-height: 1.4; }
+
+        /* --- BOTTOM SAFETY BANNER --- */
+        .training-banner { 
+            width: 100%; background: var(--banner-bg); color: #ffffff; padding: 11px; 
+            text-align: center; font-size: 11px; font-weight: 600; position: fixed; 
+            bottom: 0; left: 0; text-transform: uppercase; letter-spacing: 0.05em; z-index: 9999;
+            border-top: 2px solid var(--stripe-purple);
+        }
+    </style>
+</head>
+<body>
+
+    <aside class="sidebar">
+        <a href="dashboard_live.html" class="sidebar-header">
+            <div class="s-logo">S</div> Stripe Training
+        </a>
+        <div class="nav-item">🏠 Home</div>
+        <div class="nav-item">📊 Balances</div>
+        <div class="nav-item">🔄 Transactions</div>
+        <div class="nav-item">👤 Customers</div>
+        <div class="nav-item">📦 Product catalog</div>
+        <div class="nav-group-label">Products</div>
+        <div class="nav-item">💳 Payments</div>
+        <div class="nav-item">📑 Billing</div>
+        <div class="nav-item active">📈 Reporting</div>
+        
+        <div class="sidebar-footer" id="devTrigger">
+            <div class="dev-icon-box" id="devChevron">▶</div>
+            <span class="dev-tag">DEVELOPERS</span>
+            
+            <div class="dev-popup" id="devMenu">
+                <div class="menu-section">
+                    <div class="section-label">Workbench</div>
+                    <a href="#" class="menu-item">Overview</a>
+                    <a href="#" class="menu-item">Webhooks</a>
+                    <a href="#" class="menu-item">Events</a>
+                    <a href="#" class="menu-item">Logs</a>
+                </div>
+                <div class="menu-section">
+                    <div class="section-label">Documentation</div>
+                    <a href="#" class="menu-item">API reference <span class="external-icon">↗</span></a>
+                    <a href="#" class="menu-item">SDKs <span class="external-icon">↗</span></a>
+                    <a href="#" class="menu-item">Stripe.js <span class="external-icon">↗</span></a>
+                    <a href="#" class="menu-item">CLI <span class="external-icon">↗</span></a>
+                </div>
+                <div class="menu-section">
+                    <a href="api_keys.html" class="menu-item" style="font-weight: 600;">API keys</a>
+                    <a href="#" class="menu-item">Created apps</a>
+                    <a href="#" class="menu-item">Developer settings</a>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <main class="main">
+        <header class="top-bar">
+            <div class="search-wrapper">🔍 <input type="text" class="search-input" placeholder="Search settings"></div>
+            <div class="header-icons">
+                <span class="icon-btn">🔍</span>
+                <span class="icon-btn">❓</span>
+                <span class="icon-btn">🔔</span>
+                <a href="business_settings.html" class="icon-btn">⚙️</a>
+                <div class="plus-btn-circle">+</div>
+            </div>
+        </header>
+
+        <div class="content-scroll">
+            <h1 class="page-title">Business</h1>
+            
+            <div class="tabs">
+                <a href="business_settings.html" class="tab-link">Account details</a>
+                <a href="account_status.html" class="tab-link">Account status</a>
+                <a href="business-details.html" class="tab-link active">Business details</a>
+                <a href="bank_settings.html" class="tab-link">Bank accounts and currencies</a>
+                <a href="#" class="tab-link">Linked external accounts</a>
+                
+                <div class="dropdown-container">
+                    <span class="tab-link" id="moreTab" onclick="toggleMoreMenu(event)">More ▼</span>
+                    <div class="dropdown-menu" id="moreMenu">
+                        <a href="tax_settings.html" class="dropdown-item">Tax details</a>
+                        <div class="dropdown-item">Branding</div>
+                        <div class="dropdown-item">Custom domains</div>
+                        <div class="dropdown-item">Customer emails</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="settings-block">
+                <div class="section-title-row"><span class="section-title">Business details</span></div>
+                <div class="subheading-row">
+                    <span class="section-subheading">JOHN DOE</span>
+                    <a href="edit-business.html" class="edit-link">Edit</a>
+                </div>
+                <div class="data-row"><span class="data-label">URL</span><span class="data-value" id="topWebDisplay" style="color:var(--stripe-purple);">www.stripetraining.com</span></div>
+                <div class="data-row"><span class="data-label">Address</span><span class="data-value" id="topAddrDisplay">1286 Fannie Street, Bay City, TX 77414 US</span></div>
+                <div class="data-row"><span class="data-label">Other information</span><span class="data-value">EIN, Public business name, Product description, Industry</span></div>
+            </div>
+
+            <div class="settings-block">
+                <div class="section-title-row"><span class="section-title">Public details</span></div>
+                <div class="subheading-row">
+                    <span class="section-subheading">Customer support information</span>
+                    <a href="customer-support-info-edit.html" class="edit-link">Edit</a>
+                </div>
+                <div class="data-row"><span class="data-label">Business name</span><span class="data-value" id="dashBizName">STRIPE TRAINING</span></div>
+                <div class="data-row"><span class="data-label">Support address</span><span class="data-value" id="supportAddressSummary">TX US</span></div>
+                <div class="data-row"><span class="data-label">Support phone</span><span class="data-value" id="dashPhone">+1 502-366-0748</span></div>
+                <div class="data-row"><span class="data-label">Statement descriptor</span><span class="data-value" id="dashDescriptor" style="text-transform:uppercase; font-weight: 600;">STRIPE TRAINING</span></div>
+            </div>
+
+            <div class="settings-block">
+                <div class="section-title-row"><div class="section-title">Management and ownership</div></div>
+                <div class="management-card">
+                    <div class="card-title">Change account representative</div>
+                    <div class="card-subtext">Add or select a person who has the authority to represent your organization.</div>
+                </div>
+                <div class="data-row"><span class="data-label">Representative</span><span class="data-value">John Doe</span></div>
+                <div class="data-row"><span class="data-label">Role</span><span class="data-value">Account representative</span></div>
+                <div class="data-row"><span class="data-label">Email</span><span class="data-value">trainee@example.com</span></div>
+                <div class="data-row"><span class="data-label">Date of birth</span><span class="data-value">April 22, 1988</span></div>
+            </div>
+        </div>
+    </main>
+
+    <div class="training-banner">
+        ⚠️ TRAINING SIMULATION: DO NOT ENTER REAL FINANCIAL OR SENSITIVE DATA.
+    </div>
+
+    <script>
+        // JS Logic for Menus
+        const devTrigger = document.getElementById('devTrigger');
+        const devMenu = document.getElementById('devMenu');
+        const devChevron = document.getElementById('devChevron');
+        const moreTab = document.getElementById('moreTab');
+        const moreMenu = document.getElementById('moreMenu');
+
+        devTrigger.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const isHidden = devMenu.style.display === 'none' || devMenu.style.display === '';
+            devMenu.style.display = isHidden ? 'flex' : 'none';
+            devChevron.classList.toggle('open', isHidden);
+            if(moreMenu) moreMenu.style.display = 'none';
+        });
+
+        devMenu.addEventListener('click', (e) => {
+            e.stopPropagation();
+        });
+
+        function toggleMoreMenu(e) {
+            e.stopPropagation();
+            moreMenu.style.display = (moreMenu.style.display === 'block') ? 'none' : 'block';
+            if(devMenu) {
+                devMenu.style.display = 'none';
+                devChevron.classList.remove('open');
+            }
+        }
+
+        window.onclick = function(event) {
+            if (devMenu && devMenu.style.display === 'flex') {
+                devMenu.style.display = 'none';
+                devChevron.classList.remove('open');
+            }
+            if (moreMenu && moreMenu.style.display === 'block') {
+                moreMenu.style.display = 'none';
+            }
+        }
+
+        // Data Loader
+        window.onload = function() {
+            const savedName = sessionStorage.getItem('storedBusinessName');
+            const savedFullAddr = sessionStorage.getItem('storedAddress');
+            const savedWebsite = sessionStorage.getItem('storedWebsite');
+            const savedPhone = sessionStorage.getItem('storedPhone');
+
+            if (savedName) { 
+                const nameText = savedName.toUpperCase();
+                document.getElementById('dashBizName').innerText = nameText; 
+                document.getElementById('dashDescriptor').innerText = nameText;
+            }
+
+            if (savedFullAddr) { 
+                let fullFormatted = savedFullAddr.replace(/<br>/g, ', ').replace(/^[\s,]+/, '').replace(/, ,/g, ',');
+                document.getElementById('topAddrDisplay').innerText = fullFormatted;
+
+                let addrLines = savedFullAddr.split('<br>');
+                let lastLine = addrLines.length > 1 ? addrLines[1] : addrLines[0];
+                let cleanSummary = lastLine.replace(/[\d,]/g, '').trim();
+                document.getElementById('supportAddressSummary').innerText = cleanSummary || "TX US";
+            }
+
+            if (savedWebsite) document.getElementById('topWebDisplay').innerText = savedWebsite;
+            if (savedPhone) document.getElementById('dashPhone').innerText = savedPhone;
+        };
+    </script>
+</body>
+</html>

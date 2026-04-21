@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Settings - Stripe Payment Training</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --stripe-purple: #635bff;
+            --stripe-dark: #1a1f36;
+            --stripe-slate: #4f566b;
+            --stripe-border: #e6e6e6;
+            --stripe-bg: #ffffff;
+            --banner-bg: #1a1f36;
+        }
+
+        ::-webkit-scrollbar { display: none; }
+        * { 
+            box-sizing: border-box; 
+            margin: 0; 
+            padding: 0; 
+            -webkit-font-smoothing: antialiased; 
+            -moz-osx-font-smoothing: grayscale;
+            font-family: 'Inter', -apple-system, sans-serif !important; 
+        }
+
+        body { 
+            background-color: var(--stripe-bg); 
+            display: flex; 
+            flex-direction: column; 
+            height: 100vh; 
+            color: var(--stripe-dark); 
+            overflow: hidden; 
+            font-size: 13.5px; 
+            line-height: 1.5;
+            letter-spacing: -0.011em; 
+            position: relative;
+        }
+
+        /* --- SIMULATION WATERMARK --- */
+        body::before {
+            content: "INTERNAL TRAINING SIMULATION ONLY";
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%) rotate(-30deg);
+            font-size: 4.5rem;
+            color: rgba(0, 0, 0, 0.02);
+            font-weight: 900;
+            z-index: 0;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+
+        /* --- BOTTOM SAFETY BANNER --- */
+        .training-banner { 
+            width: 100%; 
+            background: var(--banner-bg); 
+            color: #ffffff; 
+            padding: 12px; 
+            text-align: center; 
+            font-size: 11px; 
+            font-weight: 700; 
+            position: fixed; 
+            bottom: 0; 
+            left: 0;
+            text-transform: uppercase; 
+            letter-spacing: 0.05em; 
+            z-index: 9999;
+            border-top: 2px solid var(--stripe-purple);
+        }
+
+        /* Layout */
+        .wrapper { 
+            display: flex; 
+            flex: 1; 
+            overflow: hidden; 
+            margin-bottom: 40px; /* Clearance for the banner */
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Sidebar Navigation */
+        .sidebar { 
+            width: 240px; 
+            background: #fff; 
+            border-right: 1px solid var(--stripe-border); 
+            padding: 12px 0; 
+            display: flex; 
+            flex-direction: column; 
+            flex-shrink: 0;
+        }
+        .nav-header { 
+            padding: 12px 20px 24px; 
+            font-weight: 700; 
+            display: flex; 
+            align-items: center; 
+            gap: 10px; 
+            font-size: 14.5px; 
+            color: var(--stripe-dark); 
+            letter-spacing: -0.02em;
+        }
+        .nav-item { 
+            padding: 7px 20px; 
+            font-size: 13.5px; 
+            color: var(--stripe-slate); 
+            cursor: pointer; 
+            display: flex; 
+            align-items: center; 
+            gap: 12px; 
+            font-weight: 500; 
+            text-decoration: none;
+        }
+        .nav-item:hover { background: #f6f9fc; color: var(--stripe-dark); }
+        
+        .section-label { 
+            padding: 24px 20px 8px; 
+            font-size: 11px; 
+            text-transform: uppercase; 
+            color: #a3acb9; 
+            font-weight: 700; 
+            letter-spacing: 0.05em; 
+        }
+
+        /* Main Area */
+        .main { flex: 1; display: flex; flex-direction: column; position: relative; overflow-y: auto; background: #fff; }
+        
+        .top-bar { 
+            height: 54px; 
+            border-bottom: 1px solid var(--stripe-border); 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            padding: 0 32px; 
+            flex-shrink: 0;
+            position: sticky;
+            top: 0;
+            background: #fff;
+            z-index: 10;
+        }
+
+        /* Aligned Search Container */
+        .search-area { 
+            background: #f2f2f2; 
+            padding: 0 12px; 
+            border-radius: 6px; 
+            width: 320px; 
+            height: 32px; 
+            display: flex;
+            align-items: center; 
+            gap: 8px;
+        }
+
+        .search-input { 
+            border: none; 
+            background: transparent; 
+            outline: none; 
+            color: var(--stripe-dark); 
+            font-size: 13.5px; 
+            width: 100%;
+        }
+        
+        .utility-icons { display: flex; align-items: center; gap: 20px; font-size: 16px; }
+        .profile-btn-plus { 
+            width: 24px; height: 24px; 
+            background: var(--stripe-purple); color: white; 
+            border-radius: 50%; display: flex; 
+            align-items: center; justify-content: center; 
+            font-size: 18px; font-weight: 600; cursor: pointer; 
+        }
+
+        /* Settings Grid Layout */
+        .container { padding: 48px 64px 120px; max-width: 1100px; }
+        .section { margin-bottom: 56px; }
+        .title { 
+            font-size: 16px; 
+            font-weight: 700; 
+            margin-bottom: 24px; 
+            color: var(--stripe-dark); 
+            letter-spacing: -0.01em;
+        }
+        
+        .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 48px 40px; }
+        
+        .card { 
+            display: flex; 
+            gap: 16px; 
+            cursor: pointer; 
+            text-decoration: none; 
+            color: inherit; 
+            align-items: flex-start; 
+            padding: 8px;
+            margin: -8px;
+            border-radius: 8px;
+            transition: background 0.1s;
+        }
+        .card:hover { background: #f6f9fc; }
+        .card:hover .card-title { color: var(--stripe-purple); }
+        
+        .icon { font-size: 20px; width: 24px; color: #8792a2; text-align: center; margin-top: 2px; }
+        .card-title { font-size: 14px; font-weight: 600; margin-bottom: 4px; color: var(--stripe-dark); transition: color 0.1s; }
+        .card-desc { font-size: 13px; color: var(--stripe-slate); line-height: 1.5; }
+
+        /* Setup Guide Card */
+        .guide-card {
+            position: fixed; bottom: 62px; right: 24px; width: 280px;
+            background: white; border-radius: 8px; border: 1px solid var(--stripe-border);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.06); z-index: 500;
+        }
+        .guide-header { 
+            padding: 12px 16px; border-bottom: 1px solid #f2f2f2; 
+            display: flex; justify-content: space-between; 
+            font-size: 11px; font-weight: 700; text-transform: uppercase; 
+            letter-spacing: 0.05em; color: #a3acb9;
+        }
+        .guide-body { padding: 16px; }
+        .perks { 
+            background: #f6f9fc; border-radius: 8px; 
+            padding: 14px; display: flex; align-items: center; 
+            gap: 12px; border: 1px solid #eef2f6; 
+        }
+    </style>
+</head>
+<body>
+
+    <div class="wrapper">
+        <aside class="sidebar">
+            <div class="nav-header">
+                <span style="background:var(--stripe-purple); color:white; width:24px; height:24px; display:flex; align-items:center; justify-content:center; border-radius:4px; font-size:12px; font-weight:800;">S</span>
+                Stripe Training
+            </div>
+            <a href="dashboard_live.html" class="nav-item">🏠 Home</a>
+            <div class="nav-item">📊 Balances</div>
+            <div class="nav-item">🔄 Transactions</div>
+            <div class="nav-item">👥 Customers</div>
+            <div class="nav-item">📦 Product catalog</div>
+            
+            <div class="section-label">Products</div>
+            <div class="nav-item">💳 Payments</div>
+            <div class="nav-item">🧾 Billing</div>
+            <div class="nav-item">📈 Reporting</div>
+            
+            <div style="border-top: 1px solid var(--stripe-border); margin-top: auto; padding-top: 12px; margin-bottom: 12px;">
+                <a href="api_keys.html" class="nav-item">💻 Developers</a>
+            </div>
+        </aside>
+
+        <main class="main">
+            <header class="top-bar">
+                <div class="search-area">
+                    <span style="color:#a3acb9">🔍</span>
+                    <input type="text" class="search-input" placeholder="Search settings">
+                </div>
+                <div class="utility-icons">
+                    <span style="opacity: 0.6; cursor: pointer;">❓</span>
+                    <span style="opacity: 0.6; cursor: pointer;">🔔</span>
+                    <span style="color:var(--stripe-purple); cursor: pointer;">⚙️</span>
+                    <div class="profile-btn-plus">+</div>
+                </div>
+            </header>
+
+            <div class="container">
+                <div class="section">
+                    <h2 class="title">Personal settings</h2>
+                    <div class="grid">
+                        <div class="card">
+                            <div class="icon">👤</div>
+                            <div>
+                                <div class="card-title">Personal details</div>
+                                <div class="card-desc">Contact information, password, and authentication methods.</div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="icon">✉️</div>
+                            <div>
+                                <div class="card-title">Communication preferences</div>
+                                <div class="card-desc">Customize emails, SMS, and push notifications.</div>
+                            </div>
+                        </div>
+                        <a href="api_keys.html" class="card">
+                            <div class="icon" style="color:var(--stripe-purple);">🛠️</div>
+                            <div>
+                                <div class="card-title">Developers</div>
+                                <div class="card-desc">Workbench and developer tools for training.</div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2 class="title">Account settings</h2>
+                    <div class="grid">
+                        <a href="business_settings.html" class="card">
+                            <div class="icon">🏢</div>
+                            <div>
+                                <div class="card-title">Business</div>
+                                <div class="card-desc">Account details, public info, payouts, and legal entity.</div>
+                            </div>
+                        </a>
+                        <div class="card">
+                            <div class="icon">🔒</div>
+                            <div>
+                                <div class="card-title">Team and security</div>
+                                <div class="card-desc">Team members, roles, and account security.</div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="icon">🌐</div>
+                            <div>
+                                <div class="card-title">Stripe profile</div>
+                                <div class="card-desc">Manage how you show up to other businesses.</div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="icon">💳</div>
+                            <div>
+                                <div class="card-title">Your plans</div>
+                                <div class="card-desc">Manage how you pay for services.</div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="icon">📄</div>
+                            <div>
+                                <div class="card-title">Compliance and documents</div>
+                                <div class="card-desc">PCI compliance and account documents.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2 class="title">Product settings</h2>
+                    <div class="grid">
+                        <div class="card"><div class="icon">💳</div><div class="card-title">Payments</div></div>
+                        <div class="card"><div class="icon">🧾</div><div class="card-title">Billing</div></div>
+                        <div class="card"><div class="icon">📊</div><div class="card-title">Reporting</div></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="guide-card">
+                <div class="guide-header"><span>Setup guide</span><span style="cursor:pointer;">✕</span></div>
+                <div class="guide-body">
+                    <div style="display:flex; justify-content:space-between; align-items:center; font-size:13px; margin-bottom:12px;">
+                        <span style="font-weight:500;">Customize your setup</span>
+                        <span style="background:var(--stripe-purple); color:white; border-radius:4px; padding:2px 8px; font-weight:700;">→</span>
+                    </div>
+                    <div class="perks">
+                        <div style="font-size: 18px;">🎯</div>
+                        <div style="font-size: 12px; line-height:1.4;">
+                            <div style="font-weight: 700; color: var(--stripe-dark);">You're ready to go!</div>
+                            <div style="color:var(--stripe-purple); font-weight:600; cursor:pointer;">View your perks</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div class="training-banner">
+        ⚠️ TRAINING SIMULATION: DO NOT ENTER REAL FINANCIAL OR SENSITIVE DATA.
+    </div>
+
+</body>
+</html>

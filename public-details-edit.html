@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Edit Public Details - Stripe Training</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --stripe-purple: #635bff;
+            --stripe-dark: #1a1f36;
+            --stripe-slate: #4f566b;
+            --stripe-border: #e6e6e6;
+            --banner-bg: #1a1f36;
+        }
+
+        /* --- GLOBAL RESET --- */
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif !important; -webkit-font-smoothing: antialiased; letter-spacing: -0.011em; }
+        
+        body { 
+            background-color: #fff; 
+            color: var(--stripe-dark); 
+            line-height: 1.4; 
+            padding-bottom: 80px; /* Buffer for bottom banner */
+        }
+
+        /* --- BOTTOM SAFETY BANNER --- */
+        .training-banner { 
+            width: 100%; 
+            background: var(--banner-bg); 
+            color: #ffffff; 
+            padding: 12px; 
+            text-align: center; 
+            font-size: 11px; 
+            font-weight: 600; 
+            position: fixed; 
+            bottom: 0; 
+            left: 0;
+            text-transform: uppercase; 
+            letter-spacing: 0.05em; 
+            z-index: 9999;
+            border-top: 2px solid var(--stripe-purple);
+        }
+
+        .header { display: flex; align-items: center; padding: 15px 25px; border-bottom: 1px solid var(--stripe-border); font-size: 14px; position: sticky; top: 0; background: white; z-index: 100; }
+        .close-btn { font-size: 18px; margin-right: 20px; cursor: pointer; color: var(--stripe-slate); text-decoration: none; }
+        
+        .container { display: flex; max-width: 1000px; margin: 0 auto; padding-top: 50px; padding-left: 20px; }
+        
+        .stepper { width: 280px; padding-right: 40px; position: sticky; top: 100px; height: fit-content; }
+        .step { display: flex; align-items: center; gap: 12px; margin-bottom: 25px; font-size: 14px; color: var(--stripe-slate); }
+        .circle { width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--stripe-border); display: flex; align-items: center; justify-content: center; font-size: 10px; }
+        .circle.checked { background: var(--stripe-purple); border-color: var(--stripe-purple); color: white; }
+        .line { width: 2px; height: 25px; background: var(--stripe-purple); margin-left: 9px; margin-top: -20px; margin-bottom: 5px; }
+        
+        .main-content { flex: 1; max-width: 540px; }
+        h1 { font-size: 28px; font-weight: 700; margin-bottom: 30px; letter-spacing: -0.02em; }
+        
+        .form-group { margin-bottom: 35px; }
+        .section-header { font-size: 18px; font-weight: 700; margin-bottom: 12px; display: block; }
+        label { font-weight: 600; font-size: 14px; color: var(--stripe-dark); display: block; margin-bottom: 8px; }
+        
+        .helper-text { font-size: 13px; color: var(--stripe-slate); margin-bottom: 12px; line-height: 1.5; }
+        
+        input, select { width: 100%; padding: 10px 12px; border: 1px solid var(--stripe-border); border-radius: 4px; font-size: 14px; margin-bottom: 10px; outline-color: var(--stripe-purple); color: var(--stripe-dark); }
+        
+        .preview-box { border: 1px solid var(--stripe-border); border-radius: 4px; padding: 15px; margin-bottom: 15px; background: #fff; font-size: 13px; color: var(--stripe-purple); font-weight: 500; display: flex; align-items: center; }
+        
+        .toggle-container { display: flex; align-items: center; gap: 12px; margin-bottom: 25px; }
+        .switch { position: relative; display: inline-block; width: 34px; height: 20px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #e6e6e6; transition: .4s; border-radius: 20px; }
+        .slider:before { position: absolute; content: ""; height: 14px; width: 14px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: var(--stripe-purple); }
+        input:checked + .slider:before { transform: translateX(14px); }
+        
+        .save-btn { background: var(--stripe-purple); color: white; border: none; padding: 10px 0; width: 100%; border-radius: 4px; font-weight: 600; cursor: pointer; font-size: 14px; margin-top: 20px; display: block; text-align: center; text-decoration: none; transition: background 0.15s; }
+        .save-btn:hover { background: #4339ca; }
+        
+        .cancel-btn { background: white; color: var(--stripe-slate); border: 1px solid var(--stripe-border); padding: 10px 0; width: 100%; border-radius: 4px; font-weight: 600; cursor: pointer; font-size: 14px; margin-top: 10px; display: block; text-align: center; text-decoration: none; }
+        .cancel-btn:hover { background: #f6f9fc; color: var(--stripe-dark); }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <a href="activate.html" class="close-btn">✕</a>
+        <span>Activate your account</span>
+    </div>
+
+    <div class="container">
+        <aside class="stepper">
+            <div class="step"><div class="circle checked">✓</div> Verify your business</div><div class="line"></div>
+            <div class="step"><div class="circle checked">✓</div> Add your bank</div><div class="line"></div>
+            <div class="step"><div class="circle checked">✓</div> Add extras</div><div class="line"></div>
+            <div class="step" style="color: var(--stripe-dark); font-weight: 600;"><div class="circle">4</div> Review and submit</div>
+        </aside>
+
+        <main class="main-content">
+            <h1>Edit public details</h1>
+
+            <div class="form-group">
+                <span class="section-header">Statement descriptor</span>
+                <p class="helper-text">This will appear on your customers' bank statements.</p>
+                <input type="text" id="publicDescriptor" value="Stripe Training" maxlength="22">
+                
+                <div class="preview-box">
+                    <span style="color: #a3acb9; margin-right: 10px;">🏦</span> <span id="previewText">STRIPE TRAINING</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <span class="section-header">Customer support</span>
+                <p class="helper-text">Support details displayed to your customers.</p>
+                
+                <label>Phone number</label>
+                <div style="display: flex; gap: 8px;">
+                    <select style="width: 80px;"><option>🇺🇸 +1</option></select>
+                    <input type="text" id="publicPhone" value="502-366-0748">
+                </div>
+
+                <div class="toggle-container">
+                    <label class="switch">
+                        <input type="checkbox" checked>
+                        <span class="slider"></span>
+                    </label>
+                    <span style="font-size: 13px; color: var(--stripe-slate);">Show phone number on receipts</span>
+                </div>
+
+                <label>Support address</label>
+                <select disabled><option>United States</option></select>
+                <input type="text" id="publicAddr" value="1286 Fannie Street" placeholder="Street Address">
+                <input type="text" id="publicCity" value="Bay City" placeholder="City">
+                
+                <input type="text" id="publicState" value="TX" placeholder="State">
+                <input type="text" id="publicZip" value="77414" placeholder="Zip code">
+            </div>
+
+            <button onclick="savePublicDetails()" class="save-btn">Save Training Data</button>
+            <a href="activate.html" class="cancel-btn">Cancel</a>
+        </main>
+    </div>
+
+    <div class="training-banner">
+        Simulation Mode: This site is only intended for training purposes for new hires.
+    </div>
+
+    <script>
+        const descInput = document.getElementById('publicDescriptor');
+        const previewText = document.getElementById('previewText');
+        
+        descInput.addEventListener('input', function() {
+            previewText.innerText = this.value.toUpperCase() || "YOUR BUSINESS NAME";
+        });
+
+        function savePublicDetails() {
+            const descriptor = document.getElementById('publicDescriptor').value.trim();
+            const phone = document.getElementById('publicPhone').value.trim();
+            const street = document.getElementById('publicAddr').value.trim();
+            const city = document.getElementById('publicCity').value.trim();
+            const state = document.getElementById('publicState').value.trim();
+            const zip = document.getElementById('publicZip').value.trim();
+
+            let formattedAddr = `${street}, ${city},<br>${state} ${zip} US`;
+            
+            // Storage sync
+            sessionStorage.setItem('storedBusinessName', descriptor);
+            sessionStorage.setItem('storedPhone', `+1 ${phone}`);
+            sessionStorage.setItem('storedAddress', formattedAddr);
+
+            window.location.href = 'activate.html';
+        }
+    </script>
+</body>
+</html>

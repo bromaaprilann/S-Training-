@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Dashboard - Stripe Training</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --stripe-purple: #635bff;
+            --stripe-dark: #1a1f36;
+            --stripe-slate: #4f566b;
+            --stripe-border: #e6e6e6;
+            --stripe-bg: #ffffff;
+            --banner-bg: #1a1f36;
+        }
+
+        ::-webkit-scrollbar { display: none; }
+        * { 
+            box-sizing: border-box; 
+            margin: 0; 
+            padding: 0; 
+            -webkit-font-smoothing: antialiased; 
+            font-family: 'Inter', -apple-system, sans-serif !important; 
+        }
+
+        body { 
+            background-color: var(--stripe-bg); 
+            display: flex; 
+            flex-direction: column; 
+            height: 100vh; 
+            color: var(--stripe-dark); 
+            overflow: hidden; 
+            font-size: 13.5px; 
+            line-height: 1.5;
+            letter-spacing: -0.011em; 
+            position: relative;
+        }
+
+        /* --- SIMULATION WATERMARK --- */
+        body::before {
+            content: "INTERNAL TRAINING SIMULATION ONLY";
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%) rotate(-30deg);
+            font-size: 4.5rem;
+            color: rgba(0, 0, 0, 0.02);
+            font-weight: 900;
+            z-index: 0;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+
+        /* --- SAFETY HARBOR BANNER --- */
+        .training-banner { 
+            width: 100%; 
+            background: var(--banner-bg); 
+            color: #ffffff; 
+            padding: 12px; 
+            text-align: center; 
+            font-size: 11px; 
+            font-weight: 700; 
+            position: fixed; 
+            bottom: 0; 
+            left: 0; 
+            text-transform: uppercase; 
+            letter-spacing: 0.05em; 
+            z-index: 9999;
+            border-top: 2px solid var(--stripe-purple);
+        }
+
+        .wrapper { 
+            display: flex; 
+            flex: 1; 
+            overflow: hidden; 
+            margin-bottom: 40px; /* Clearance for fixed banner */
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Sidebar Navigation */
+        .sidebar { 
+            width: 240px; 
+            border-right: 1px solid var(--stripe-border); 
+            padding: 12px 0; 
+            display: flex; 
+            flex-direction: column; 
+            background: #fff;
+            flex-shrink: 0;
+        }
+        .nav-header { padding: 12px 20px 24px; font-weight: 700; display: flex; align-items: center; gap: 10px; font-size: 14.5px; color: var(--stripe-dark); }
+        .nav-item { padding: 7px 20px; font-size: 13.5px; color: var(--stripe-slate); cursor: pointer; display: flex; align-items: center; gap: 12px; font-weight: 500; }
+        .nav-item:hover { background: #f6f9fc; color: var(--stripe-dark); }
+        .nav-item.active { color: var(--stripe-purple); background: #f6f9fc; border-right: 3px solid var(--stripe-purple); font-weight: 600; }
+
+        /* Top Bar */
+        .main { flex: 1; display: flex; flex-direction: column; min-width: 0; background: #fff; }
+        .top-bar { 
+            height: 54px; 
+            border-bottom: 1px solid var(--stripe-border); 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            padding: 0 32px; 
+            flex-shrink: 0; 
+            background: #fff;
+        }
+
+        .search-area { 
+            background: #f2f2f2; 
+            padding: 0 12px; 
+            border-radius: 6px; 
+            width: 320px; 
+            height: 32px; 
+            display: flex;
+            align-items: center; 
+            gap: 8px;
+        }
+
+        .search-input { 
+            border: none; 
+            background: transparent; 
+            outline: none; 
+            color: var(--stripe-dark); 
+            font-size: 13.5px; 
+            width: 100%;
+        }
+        
+        .utility-icons { display: flex; align-items: center; gap: 20px; font-size: 16px; }
+        .profile-btn-plus { 
+            width: 24px; height: 24px; background: var(--stripe-purple); color: white; 
+            border-radius: 50%; display: flex; align-items: center; justify-content: center; 
+            font-size: 18px; font-weight: 600; cursor: pointer; 
+        }
+
+        /* Content Scroll Area */
+        .content-scroll { flex: 1; padding: 48px 64px; overflow-y: auto; }
+        .dashboard-grid { display: grid; grid-template-columns: 1fr 300px; gap: 64px; }
+
+        h1 { font-size: 28px; margin-bottom: 40px; font-weight: 700; letter-spacing: -0.03em; color: var(--stripe-dark); }
+        
+        /* Chart Styles */
+        .chart-container { margin: 40px 0; position: relative; height: 120px; border-bottom: 1px solid #f2f2f2; }
+        .descriptor-label { position: absolute; top: -25px; left: 50%; transform: translateX(-50%); font-size: 11px; font-weight: 700; color: var(--stripe-purple); text-transform: uppercase; letter-spacing: 0.08em; }
+        .chart-svg { width: 100%; height: 100%; }
+        .chart-path { fill: none; stroke: var(--stripe-purple); stroke-width: 2.5; stroke-linecap: round; }
+
+        .stat-label { font-size: 13.5px; color: var(--stripe-slate); margin-bottom: 8px; font-weight: 500; }
+        .stat-amount { font-size: 24px; font-weight: 700; letter-spacing: -0.02em; color: var(--stripe-dark); }
+
+        /* Recommendations Card */
+        .rec-card { background: #f6f9fc; border: 1px solid var(--stripe-border); border-radius: 8px; padding: 24px; }
+        .rec-title { font-size: 12px; font-weight: 700; color: var(--stripe-slate); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 24px; }
+        .api-row { display: flex; justify-content: space-between; align-items: center; font-size: 13px; margin-bottom: 12px; }
+        .api-value { color: #a3acb9; font-family: monospace; }
+    </style>
+</head>
+<body>
+
+    <div class="wrapper">
+        <aside class="sidebar">
+            <div class="nav-header">
+                <span style="background:var(--stripe-purple); color:white; width:24px; height:24px; display:flex; align-items:center; justify-content:center; border-radius:4px; font-size:12px; font-weight:800;">S</span>
+                <span id="sideBrand">Stripe Training</span>
+            </div>
+            <div class="nav-item active">🏠 Home</div>
+            <div class="nav-item">📊 Balances</div>
+            <div class="nav-item">🔄 Transactions</div>
+            <div class="nav-item">👥 Customers</div>
+            <div class="nav-item">📦 Product catalog</div>
+            <div class="nav-item">💳 Payments</div>
+            <div class="nav-item">🧾 Billing</div>
+            <div class="nav-item">📈 Reporting</div>
+        </aside>
+
+        <main class="main">
+            <header class="top-bar">
+                <div class="search-area">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" class="search-input" placeholder="Search">
+                </div>
+
+                <div class="utility-icons">
+                    <span style="opacity: 0.6; cursor: pointer;">❓</span>
+                    <span style="opacity: 0.6; cursor: pointer;">🔔</span>
+                    <span style="opacity: 0.6; cursor: pointer;" onclick="location.href='settings.html'">⚙️</span>
+                    <div class="profile-btn-plus">+</div>
+                </div>
+            </header>
+
+            <div class="content-scroll">
+                <div class="dashboard-grid">
+                    <div class="left-col">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                            <h1>Today</h1>
+                            <span style="color:var(--stripe-purple); font-size:13.5px; font-weight:600; cursor:pointer;">Pay out funds</span>
+                        </div>
+
+                        <div class="chart-container">
+                            <div class="descriptor-label" id="chartLabel">STRIPE TRAINING</div>
+                            <svg class="chart-svg" viewBox="0 0 600 100" preserveAspectRatio="none">
+                                <path class="chart-path" d="M0,80 Q150,75 300,50 T600,10" />
+                            </svg>
+                        </div>
+
+                        <div class="stat-label">USD balance</div>
+                        <div class="stat-amount">$0.00</div>
+                    </div>
+
+                    <div class="right-col">
+                        <div class="rec-card">
+                            <div class="rec-title">Recommendations</div>
+                            <div style="font-size: 14px; font-weight: 700; margin-bottom: 16px;">API keys</div>
+                            <div class="api-row">
+                                <span style="color:var(--stripe-slate)">Publishable key</span>
+                                <span class="api-value">pk_live_...</span>
+                            </div>
+                            <div class="api-row">
+                                <span style="color:var(--stripe-slate)">Secret key</span>
+                                <span class="api-value">sk_live_...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div class="training-banner">
+        ⚠️ STRIPE TRAINING SIMULATION: DO NOT ENTER REAL FINANCIAL OR SENSITIVE DATA.
+    </div>
+
+    <script>
+        window.onload = function() {
+            // Check session for custom business name, otherwise default to "Stripe Training"
+            const brandName = "Stripe Training";
+            const savedName = sessionStorage.getItem('storedBusinessName');
+            
+            const finalName = savedName || brandName;
+            
+            const label = document.getElementById('chartLabel');
+            const brand = document.getElementById('sideBrand');
+            
+            if(label) label.innerText = finalName.toUpperCase();
+            if(brand) brand.innerText = finalName;
+        };
+    </script>
+</body>
+</html>

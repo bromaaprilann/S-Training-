@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Activate your account - Review & Submit</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --stripe-purple: #635bff;
+            --stripe-dark: #1a1f36;
+            --stripe-slate: #4f566b;
+            --stripe-border: #e6e6e6;
+            --banner-bg: #1a1f36;
+        }
+
+        /* --- GLOBAL RESET --- */
+        * { 
+            box-sizing: border-box; 
+            margin: 0; 
+            padding: 0; 
+            font-family: 'Inter', sans-serif !important; 
+            -webkit-font-smoothing: antialiased; 
+            -moz-osx-font-smoothing: grayscale;
+            letter-spacing: -0.012em; 
+        }
+        
+        body { 
+            background-color: #fff; 
+            color: var(--stripe-dark); 
+            line-height: 1.5;
+            overflow-x: hidden;
+            font-size: 14px;
+            /* Space for bottom safety banner */
+            padding-bottom: 100px; 
+        }
+
+        /* --- BOTTOM SAFETY BANNER --- */
+        .training-banner { 
+            width: 100%; 
+            background: var(--banner-bg); 
+            color: #ffffff; 
+            padding: 12px; 
+            text-align: center; 
+            font-size: 11px; 
+            font-weight: 600; 
+            position: fixed; 
+            bottom: 0; 
+            left: 0;
+            text-transform: uppercase; 
+            letter-spacing: 0.05em; 
+            z-index: 9999;
+            border-top: 2px solid var(--stripe-purple);
+        }
+
+        .header { 
+            display: flex; 
+            align-items: center; 
+            padding: 14px 24px; 
+            border-bottom: 1px solid var(--stripe-border); 
+            font-size: 14.5px; 
+            font-weight: 500;
+            position: sticky; 
+            top: 0; 
+            background: white; 
+            z-index: 100; 
+        }
+        .close-btn { font-size: 18px; margin-right: 20px; cursor: pointer; color: var(--stripe-slate); text-decoration: none; }
+        
+        .container { 
+            display: flex; 
+            max-width: 1040px; 
+            margin: 0 auto; 
+            padding: 64px 24px 120px; 
+        }
+        
+        /* Stepper */
+        .stepper { 
+            width: 260px; 
+            padding-right: 48px; 
+            position: sticky; 
+            top: 100px; 
+            height: fit-content; 
+            flex-shrink: 0;
+        }
+        .step { display: flex; align-items: center; gap: 14px; margin-bottom: 28px; font-size: 14px; color: var(--stripe-slate); font-weight: 500; }
+        .step.active { color: var(--stripe-dark); font-weight: 600; }
+        .circle { width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--stripe-border); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; flex-shrink: 0; }
+        .circle.checked { background: var(--stripe-purple); border-color: var(--stripe-purple); color: white; }
+        .line { width: 2px; height: 28px; background: var(--stripe-purple); margin-left: 10px; margin-top: -24px; margin-bottom: 4px; }
+        
+        /* Main Content Area */
+        .main-content { flex: 1; max-width: 600px; }
+        h1 { font-size: 32px; font-weight: 700; margin-bottom: 12px; letter-spacing: -0.03em; color: var(--stripe-dark); }
+        .subtext { color: var(--stripe-slate); font-size: 15.5px; margin-bottom: 48px; font-weight: 400; }
+        
+        .section-title { font-weight: 600; font-size: 15px; margin-bottom: 14px; margin-top: 48px; color: var(--stripe-dark); }
+        .review-card { border: 1px solid var(--stripe-border); border-radius: 8px; margin-bottom: 16px; background: white; padding: 24px; box-shadow: 0 1px 2px rgba(0,0,0,0.04); }
+        
+        .card-header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+        .biz-name-title { font-weight: 600; font-size: 15px; color: var(--stripe-dark); }
+        
+        .edit-btn { background: #fff; border: 1px solid var(--stripe-border); padding: 5px 14px; border-radius: 4px; font-size: 12.5px; font-weight: 600; cursor: pointer; color: var(--stripe-dark); text-decoration: none; transition: background 0.1s; }
+        .edit-btn:hover { background: #f6f9fc; }
+
+        .detail-item { margin-bottom: 20px; }
+        .detail-item:last-child { margin-bottom: 0; }
+        .label { color: var(--stripe-slate); display: block; font-size: 13px; margin-bottom: 6px; font-weight: 500; }
+        .value { color: var(--stripe-dark); font-size: 14px; line-height: 1.5; font-weight: 400; }
+
+        .btn-submit { background: var(--stripe-purple); color: white; border: none; padding: 14px 0; width: 100%; border-radius: 4px; font-weight: 600; cursor: pointer; font-size: 15.5px; margin-top: 48px; display: block; text-align: center; text-decoration: none; box-shadow: 0 2px 4px rgba(0,0,0,0.08); transition: background 0.15s; }
+        .btn-submit:hover { background: #4339ca; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <a href="dashboard_live.html" class="close-btn">✕</a>
+        <span>Activate your account</span>
+    </div>
+
+    <div class="container">
+        <aside class="stepper">
+            <div class="step"><div class="circle checked">✓</div> Verify your business</div><div class="line"></div>
+            <div class="step"><div class="circle checked">✓</div> Add your bank</div><div class="line"></div>
+            <div class="step"><div class="circle checked">✓</div> Add extras</div><div class="line"></div>
+            <div class="step active"><div class="circle">4</div> Review and submit</div>
+        </aside>
+
+        <main class="main-content">
+            <h1>Review and submit</h1>
+            <p class="subtext">Take a moment to review your information.</p>
+
+            <div class="section-title">Tax details</div>
+            <div class="review-card">
+                <div class="card-header-row">
+                    <div class="biz-name-title" id="taxBizName">STRIPE TRAINING</div>
+                    <a href="tax_settings.html" class="edit-btn">Edit</a>
+                </div>
+                <div class="detail-item"><span class="label">Business type</span><span class="value">Unregistered business</span></div>
+                <div class="detail-item"><span class="label">Business structure</span><span class="value">Sole proprietorship</span></div>
+                <div class="detail-item"><span class="label">Location</span><span class="value">United States</span></div>
+                <div class="detail-item"><span class="label">Tax Identification Number</span><span class="value">*****6789</span></div>
+            </div>
+
+            <div class="section-title">Business details</div>
+            <div class="review-card">
+                <div class="card-header-row">
+                    <div class="biz-name-title">Business information</div>
+                    <a href="business-details-edit.html" class="edit-btn">Edit</a>
+                </div>
+                <div class="detail-item">
+                    <span class="label">URL</span>
+                    <span class="value" id="displayUrl" style="color: var(--stripe-purple); font-weight: 500;">stripetraining.warhead.com ↗</span>
+                </div>
+                <div class="detail-item">
+                    <span class="label">Address</span>
+                    <span class="value" id="topAddrDisplay">1286 Fannie Street, Bay City, TX 77414 US</span>
+                </div>
+                <div class="detail-item">
+                    <span class="label">Other information provided</span>
+                    <span class="value">EIN, Public business name, Product description, Industry</span>
+                </div>
+            </div>
+
+            <div class="section-title">Public details</div>
+            <div class="review-card">
+                <div class="card-header-row">
+                    <div class="biz-name-title">Customer support information</div>
+                    <a href="public-details-edit.html" class="edit-btn">Edit</a>
+                </div>
+                <div class="detail-item">
+                    <span class="label">Support address</span>
+                    <span class="value" id="supportAddressDisplay">1286 Fannie Street, Bay City, TX 77414 US</span>
+                </div>
+                <div class="detail-item">
+                    <span class="label">Support phone</span>
+                    <span class="value" id="supportPhoneDisplay">+1 502-366-0748</span>
+                </div>
+                <div class="detail-item">
+                    <span class="label">Statement descriptor</span>
+                    <span class="value" id="descriptorValue">STRIPE TRAINING</span>
+                </div>
+            </div>
+
+            <div class="section-title">Management and ownership</div>
+            <div class="review-card">
+                <div class="card-header-row">
+                    <div class="biz-name-title" id="mgmtNameDisplay">John Doe</div>
+                    <a href="#" class="edit-btn">Edit</a>
+                </div>
+                <div class="detail-item"><span class="label">Role</span><span class="value">Account representative</span></div>
+                <div class="detail-item">
+                    <span class="label">Email</span>
+                    <span class="value">stripetraining@gmail.com</span>
+                </div>
+                <div class="detail-item"><span class="label">Date of birth</span><span class="value">April 22, 1988</span></div>
+                <div class="detail-item">
+                    <span class="label">Address</span>
+                    <span class="value" id="mgmtAddrDisplay">1286 Fannie Street, Bay City, TX 77414 US</span>
+                </div>
+            </div>
+
+            <button id="finalSubmit" class="btn-submit">Agree and submit</button>
+        </main>
+    </div>
+
+    <div class="training-banner">
+        ⚠️ TRAINING SIMULATION: DO NOT ENTER REAL FINANCIAL OR SENSITIVE DATA.
+    </div>
+
+    <script>
+        window.onload = function() {
+            const savedUrl = sessionStorage.getItem('storedWebsite'); 
+            const savedName = sessionStorage.getItem('storedBusinessName');
+            const savedAddr = sessionStorage.getItem('storedAddress');
+            const savedPhone = sessionStorage.getItem('storedPhone');
+
+            if (savedUrl) { document.getElementById('displayUrl').innerText = savedUrl + " ↗"; }
+            
+            if (savedName) {
+                const upperName = savedName.toUpperCase();
+                if(document.getElementById('taxBizName')) document.getElementById('taxBizName').innerText = upperName;
+                if(document.getElementById('mgmtNameDisplay')) document.getElementById('mgmtNameDisplay').innerText = upperName;
+                if(document.getElementById('descriptorValue')) document.getElementById('descriptorValue').innerText = "STRIPE TRAINING";
+            }
+
+            if (savedPhone) { document.getElementById('supportPhoneDisplay').innerText = savedPhone; }
+
+            if (savedAddr) {
+                let cleanFullAddr = savedAddr.replace(/<br>/g, ', ').replace(/^[\s,]+/, '').replace(/, ,/g, ',');
+                if(document.getElementById('topAddrDisplay')) document.getElementById('topAddrDisplay').innerText = cleanFullAddr;
+                if(document.getElementById('mgmtAddrDisplay')) document.getElementById('mgmtAddrDisplay').innerText = cleanFullAddr;
+
+                const supportDisplay = document.getElementById('supportAddressDisplay');
+                if (savedAddr.includes('<br>')) {
+                    let addrLines = savedAddr.split('<br>');
+                    let streetCityPart = addrLines[0].replace(/[,\s]/g, "");
+                    if (streetCityPart === "") {
+                        let stateCountryPart = addrLines[1].replace(/[\d,]/g, '').trim();
+                        supportDisplay.innerText = stateCountryPart || "TX US";
+                    } else {
+                        supportDisplay.innerText = cleanFullAddr;
+                    }
+                }
+            }
+        };
+
+        document.getElementById('finalSubmit').onclick = function() {
+            window.location.href = 'processing.html';
+        };
+    </script>
+</body>
+</html>
